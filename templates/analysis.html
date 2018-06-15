@@ -1,0 +1,141 @@
+{% load static %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+   var which_one = 'group'
+</script>
+
+
+<div class="overlay-background" style="position:absolute; left:0px; top:0px; width:1280px; height:960px; background-image:url({% static 'job/image/images/WKnews-web-analysis-background.jpg' %});">
+
+{% include 'navbar.htm' %}
+<div class="search_list">
+  <div class='overlay-button-label' style=" position:absolute;left:378px; top:94px; width:268px; height:26px;" title="">
+    公司名稱
+  </div>
+  <div class='overlay-button' style=" position:absolute; left:378px; top:120px; width:268px; height:26px;" title="">
+    {{form.company}}
+  </div>
+
+
+  <div class='overlay-button-label' style="position:absolute; left:654px; top:94px; width:187px; height:26px;" title="">
+    行業
+	</div>
+  <div class='overlay-button' style="position:absolute; left:654px; top:120px; width:187px; height:26px;" title="">
+    {{form.industry}}
+	</div>
+
+  <div class='overlay-button-label' style="position:absolute; left:378px; top:150px; width:268px; height:26px;" title="">
+  職位名稱
+  </div>
+  <div class='overlay-button' style="position:absolute; left:378px; top:176px; width:268px; height:26px;" title="">
+    {{form.jobTitle}}<!-- 職位名稱 -->
+	</div>
+
+  <div class='overlay-button-label' style="position:absolute; left:654px; top:150px; width:187px; height:26px;" title="">
+    工作地點
+	</div>
+  <div class='overlay-button' style="position:absolute; left:654px; top:176px; width:187px; height:26px;" title="">
+    {{form.place}}
+	</div>
+
+  <div class='overlay-button-label' style="position:absolute; left:378px; top:206px; width:153px; height:26px;" title="">
+    薪金
+	</div>
+  <div class='overlay-button' style="position:absolute; left:378px; top:232px; width:153px; height:26px;" title="">
+    {% if model == 'labor_gov' %}
+      {{form.salary_type}} ${{form.money}}
+    {% else %}
+      {{form.salary}}
+    {% endif %}
+	</div>
+
+  <div class='overlay-button-label' style="position:absolute; left:540px; top:206px; width:108px; height:26px;" title="">
+    每週工作時數
+	</div>
+  <div class='overlay-button' style="position:absolute; left:540px; top:232px; width:108px; height:26px;" title="">
+    {{form.week_total_hour}}
+	</div>
+
+  <div class='overlay-button-label' style="position:absolute; left:657px; top:206px; width:108px; height:26px;" title="">
+    每週工作天數
+	</div>
+  <div class='overlay-button' style="position:absolute; left:657px; top:232px; width:108px; height:26px;" title="">
+    {{form.date_number}}
+	</div>
+
+  <div class='overlay-button-label' style="position:absolute; left:773px; top:206px; width:129px; height:26px;" title="">
+    一周實際時薪
+	</div>
+  <div class='overlay-button' style="position:absolute; left:773px; top:232px; width:129px; height:26px;" title="">
+    {{form.salary}}
+	</div>
+</div> <!-- search list -->
+
+<!-- start 中間東西 -->
+  <svg class='title_1 graph-detail' style="position:absolute; left:533px; top:284px; width:221px; height:20px;"></svg>
+
+  <svg class='graph graph-detail' style="position:absolute; left:318px; top:323px; width:640px; height:480px;"></svg>
+
+
+<div class='overlay-button' style=" position:absolute; left:517px; top:826px; width:248px; height:56.974px; background:RGB(153,134,117);">
+</div>
+
+<div style="position:absolute; left:536px; top:836px; width:220px; height:28px; font-size:25px; color:RGB(252, 238, 33)" >
+  搜尋/分析其他職位
+</div>
+
+</div> <!-- class="container latest-bg-2" -->
+
+
+
+<div id='holder'></div>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/queue.v1.min.js"></script>
+<script src="https://d3js.org/topojson.v1.min.js"></script>
+
+
+
+<div class="lazy">
+{% include 'homepage_overlay.html' %}
+</div>
+
+<style>
+.lazy{
+  position: absolute;
+  top:60px;
+}
+
+.overlay-button{
+  background:RGB(252, 238, 33);
+}
+.graph-detail{
+  /* border: 1px black solid; */
+}
+#loader{
+  position: absolute;
+  top: 450px;
+  left: 660px;
+}
+
+#loader-text {
+	position: absolute;
+  left: 600px;
+  top: 550px;
+	font-size: 20px;
+	width: 120px;
+  height: 120px;
+}
+
+.graph_1, .graph_2{
+	height: 240px;
+}
+</style>

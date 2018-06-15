@@ -1,0 +1,256 @@
+{% load static %}
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>你覺唔覺得自己Under Paid?</title>
+<script>
+	 var which_one = 'individual'
+</script>
+
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<div style="background-image:url({% static 'job/image/images/homepage-background.jpg'%}); position:absolute; left:0px; top:0px; width:1280px; height:960px;">
+{% include 'navbar.htm' %}
+
+<form id='job-form' action="{% url 'added' %}" method="post">
+	 {% csrf_token %}
+<div class="form-company" style="position:absolute; left:373px; top:430px; width:267px; height:26px;" title="">
+	{% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ errors }} </p>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <p> {{ error }} </p>
+        {% endfor %}
+    {% endif %}
+	{{ form.company }}<!-- 公司名稱 -->
+</div>
+
+
+<div style="position:absolute; left:649px; top:430px; width:186px; height:26px;" title="">
+	{{ form.industry }}<!-- 行業 -->
+</div>
+
+<div style="position:absolute; left:373px; top:465px; width:267px; height:26px;" title="">
+	{{ form.jobTitle }}<!-- 職位名稱 -->
+</div>
+
+
+	<div style="position:absolute; left:649px; top:465px; width:186px; height:26px;" title="">
+		{{ form.place }}<!-- 工作地點 -->
+	</div>
+
+	<div style="position:absolute; left:373px; top:499px; width:65px; height:27px;" title="">
+		{{ form.job_type }}<!-- 全職 -->
+	</div>
+
+		<div style="position:absolute; left:445px; top:499px; width:268px; height:27px; background-color: RGB(252, 238, 33);" title="">
+			{{ form.date_number }}<!-- 工作天數 -->
+		</div>
+		<div style="position:absolute; left:720px; top:499px; width:66px; height:27px;" title="">
+			{{ form.gender }}<!-- 性別 -->
+		</div>
+		<div style="position:absolute; left:373px; top:534px; width:530px; height:26px;" title="">
+			{{ form.latest_year }}<!-- 你最近從事這份工作的年份（例如由2014年做到2016年，請填2016；如現正從事這份工作，請填2017年） -->
+		</div>
+		<div style="position:absolute; left:373px; top:568px; width:104px; height:27px; background-color: RGB(252, 238, 33);">
+			{{ form.salary_period }}<!-- 支薪形式 -->
+		</div>
+		<div style="position:absolute; left:483px; top:568px; width:268px; height:27px;" title="">
+			{{ form.salary }}<!-- 薪金 -->
+		</div>
+		<div style="position:absolute; left:373px; top:603px; width:104px; height:26px;" title="">
+			{{ form.year }}<!-- 行業年資 -->
+		</div>
+		<div style="position:absolute; left:373px; top:637px; width:288px; height:27px;" title="">
+			{{ form.contract_hour }}<!-- 合約列明一周工時（如沒有合約或沒有標明，請填0） -->
+		</div>
+		<div style="position:absolute; left:670px; top:637px; width:233px; height:27px;" title="">
+			{{ form.week_total_hour }}<!-- 一周實際工時 -->
+		</div>
+		<div style="position:absolute; left:373px; top:672px; width:104px; height:26px;" title="">
+			{{ form.OT_frequency }}<!-- 加班情況 -->
+		</div>
+		<div style="position:absolute; left:483px; top:672px; width:114px; height:26px; background-color: RGB(252, 238, 33);">
+			{{ form.OT_payment }}<!-- *加班補償 -->
+		</div>
+		<div style="position:absolute; left:603px; top:672px; width:104px; height:26px;" title="">
+			{{ form.date }}<!-- *加班補償 -->
+		</div>
+
+		<div style="background:RGB(83,71,65); position:absolute; left:373.072px; top:740.493px; width:529.599px; height:80.584px;" title="">
+
+		</div>
+
+		<div style="position:absolute; left:515px; top:745px; width:358px; height:70.124px; font-size:12px; color: RGB(252, 238, 33)" >
+			同時加入工資時薪透明化運動，以不具名身份匿名加入我們的資料庫，與其他同樣不具名的職位比較一下閣下的待遇是否公平。
+			<br>*facebook登入只用作上述資料登記時作登錄用途, 與任何上述沒有顯示的資料沒有任何關連。
+		</div>
+
+		<input class='submit' style=" position:absolute; left:390px; top:754px; width:106px; height:40px; background-color:RGB(83,71,65); color: RGB(252, 238, 33)"
+		type="submit" value="立即分析" />
+
+	</form>
+
+	<div style="position:absolute; left:515px; top:745px; width:358px; height:70.124px; font-size:12px; color: RGB(252, 238, 33)" >
+
+	<div id="overlay">
+		<div class="close-button" onclick="off()" style="position:absolute; left:1100px; top:20px; width:22px; height:22px; font-size:22px">
+			&#10006;
+		</div>
+
+		<div class="search_list">
+		  <div class='overlay-button-label' style=" position:absolute; left:378px; top:34px; width:268px; height:26px;" title="">
+		    公司名稱
+		  </div>
+		  <div class='overlay-button overlay-company' style=" position:absolute; left:378px; top:60px; width:268px; height:26px;" title="">
+		    {{instance.company}}
+		  </div>
+
+
+		  <div class='overlay-button-label' style="position:absolute; left:654px; top:34px; width:187px; height:26px;" title="">
+		    行業
+			</div>
+		  <div class='overlay-button overlay-industry' style="position:absolute; left:654px; top:60px; width:187px; height:26px;" title="">
+		    {{instance.category}}
+			</div>
+
+		  <div class='overlay-button-label' style="position:absolute; left:378px; top:90px; width:268px; height:26px;" title="">
+		  職位名稱
+		  </div>
+		  <div class='overlay-button overlay-jobTitle' style="position:absolute; left:378px; top:116px; width:268px; height:26px;" title="">
+		    {{instance.jobTitle}}<!-- 職位名稱 -->
+			</div>
+
+		  <div class='overlay-button-label' style="position:absolute; left:654px; top:90px; width:187px; height:26px;" title="">
+		    工作地點
+			</div>
+		  <div class='overlay-button overlay-location2' style="position:absolute; left:654px; top:116px; width:187px; height:26px;" title="">
+		    {{instance.location2}}
+			</div>
+
+		  <div class='overlay-button-label' style="position:absolute; left:378px; top:146px; width:153px; height:26px;" title="">
+		    薪金
+			</div>
+		  <div class='overlay-button overlay-salary_type' style="position:absolute; left:378px; top:172px; width:153px; height:26px;" title="">
+		    {% if model == 'labor_gov' %}
+		      {{instance.salary_type}} ${{instance.money}}
+		    {% else %}
+		      {{instance.salary}}
+		    {% endif %}
+			</div>
+
+		  <div class='overlay-button-label' style="position:absolute; left:540px; top:146px; width:108px; height:26px;" title="">
+		    每週工作時數
+			</div>
+		  <div class='overlay-button overlay-week_total_hour' style="position:absolute; left:540px; top:172px; width:108px; height:26px;" title="">
+		    {{instance.week_total_hour}}
+			</div>
+
+		  <div class='overlay-button-label' style="position:absolute; left:657px; top:146px; width:108px; height:26px;" title="">
+		    每週工作天數
+			</div>
+		  <div class='overlay-button overlay-working_day_number' style="position:absolute; left:657px; top:172px; width:108px; height:26px;" title="">
+		    {{instance.working_day_number}}
+			</div>
+
+		  <div class='overlay-button-label' style="position:absolute; left:773px; top:146px; width:129px; height:26px;" title="">
+		    一周實際時薪
+			</div>
+		  <div class='overlay-button overlay-week_salary' style="position:absolute; left:773px; top:172px; width:129px; height:26px;" title="">
+		    一周實際時薪
+			</div>
+		</div> <!-- search list -->
+
+		<div id="loader-bundle">
+		<div id="loader"></div>
+		<div id="loader-text">分析中⋯⋯</div>
+		</div>
+
+	<div style="display:none;" id="myDiv" class="animate-bottom">
+	  {% include 'homepage_overlay.html' %}
+		<div class='overlay-button' style=" position:absolute; left:517px; top:856px; width:248px; height:56.974px; font-size:27px; text-align: center; margin-bottom:40px;">
+			<div class="title" style="margin:8px;">
+				<a href="{% url 'jobs_gov_data' %}">搜尋/分析其他職位</a>
+			</div> <!-- title -->
+		</div><!-- overlay_button -->
+	</div><!-- myDiv -->
+
+	</div>
+
+
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="https://d3js.org/queue.v1.min.js"></script>
+	<script src="https://d3js.org/topojson.v1.min.js"></script>
+
+
+
+
+</body>
+</html>
+<style>
+#loader{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid RGB(252, 238, 33);
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+#loader-text {
+	position: absolute;
+  left: 46%;
+  top: 65%;
+	font-size: 20px;
+	width: 120px;
+  height: 120px;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 }
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom {
+  from{ bottom:-100px; opacity:0 }
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+  text-align: center;
+}
+</style>
+
+<link rel="stylesheet" type="text/css" href="{% static 'job/css/open_job_form.css' %}" />

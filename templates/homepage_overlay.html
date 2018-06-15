@@ -1,0 +1,324 @@
+
+<!-- start 中間東西 -->
+<svg class='title_1 graph-detail' style="position:absolute; height:20px;"></svg>
+
+<svg class='graph_1 graph-detail' style="position:absolute;"></svg>
+<!-- width:640px; -->
+<svg class='title_2 graph-detail' style="position:absolute; height:20px;"></svg>
+
+<svg class='graph_2 graph-detail' style="position:absolute;"></svg>
+<!-- end 中間東西 -->
+
+
+
+<style>
+
+
+#loader{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid RGB(252, 238, 33);
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+#loader-text {
+	position: absolute;
+  left: 46%;
+  top: 65%;
+	font-size: 20px;
+	width: 120px;
+  height: 120px;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 }
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom {
+  from{ bottom:-100px; opacity:0 }
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+  text-align: center;
+}
+</style>
+
+<script>
+
+
+
+$('#job-form').on('submit', function(event){
+	event.preventDefault();
+	on()
+});
+
+
+// 這個function是用來取得頁面中提交form的data，之後用於on function之中
+/*
+ hour_or_salary︰在傳來的json 中，選擇是用hour或是用salary classification. value = 'hour_classification' or 'salary_classification'
+*/
+function draw_the_graph(json, svg_frame, svg_title, x_title_text, title_text,  hour_or_salary, text_color, graph_y_height){
+	myVar = setTimeout(showPage, 3000);
+	var hour_data = $.parseJSON(json[hour_or_salary])
+
+	// [0-5, 5-10, ...]
+	var object_array = $.map(hour_data, d=>[d.range])
+
+	var number_max = d3.max(hour_data, d=>d.number)
+
+	var svg_1 = d3.select(svg_frame)
+	var svg_title_1 = d3.select(svg_title)
+
+	var margin = {
+		top: 15,
+		right: 15,
+		left: 50,
+		bottom: 50
+	};
+
+	var height = graph_y_height;
+	var bar_width = 42;
+	var screen_width = 1280
+
+	var xScale = d3.scaleOrdinal()
+									.domain([0,500])
+									.range([0,740])
+
+	var yScale = d3.scaleLinear().domain([0, number_max]).range([height-10, 0])
+
+
+
+	function centralize(screen_width, width){
+		return 0.5*(screen_width-width)
+	}
+
+	svg_1.append('g')
+		 .attr('class', 'chart_group')
+
+	var graph_width = bar_width*hour_data.length
+	svg_1.style('height', height*1.25)
+	svg_1.style('width', graph_width)
+	svg_1.style('left', (1280-graph_width)/2 )
+
+// bar
+	svg_1.select('.chart_group')
+		 .selectAll('rect.bar')
+			.data(hour_data)
+			.enter().append('rect')
+			.attr('transform', 'translate(0,0)')
+			.classed('bar', true)
+			.attr('x', (d, i) => i*bar_width)
+			.attr('width', 20)
+			.attr('y', d=> yScale(d.number))
+			.attr('height', d=> height-yScale(d.number) )
+			.style('fill', d => d.color);
+
+// x axis的刻度
+		svg_1.select('.chart_group')
+			.selectAll('rect.bar')
+			.select('text')
+			.data(hour_data)
+			.enter().append('text')
+			.text(d=>d.range)
+			.attr('x', (d,i)=>i*bar_width)
+			.attr('y',d=> height*1.1)
+			.style("font-size", "10px")
+			.style('fill',text_color)
+
+// 寫下每個data的數字
+		svg_1.select('.chart_group')
+			.selectAll('rect.bar')
+			.select('text')
+			.data(hour_data)
+			.enter().append('text')
+			.text(d=>d.number)
+			.attr('x', (d,i)=>i*bar_width)
+			.attr('y',d=> 100)
+			.style("font-size", "10px")
+			.style('fill',text_color)
+
+//x-axis的title︰小時或金錢
+	svg_1.select('.chart_group')
+		 .append('text')
+		 .text(x_title_text)
+		 .attr('y',height*1.2)
+		 .style('fill',text_color)
+		 .attr('x',graph_width/2)
+		 .style('text-anchor','middle')
+
+// graph title
+		svg_title_1.append('text')
+  		 .text('與所有'+json['category']+'組別'+title_text+'相比')
+  		 .attr('y',height*0.10)
+  		 .attr('class', 'graph_title_text')
+			 .style("font-size", "16.5px")
+  		 .style("fill", text_color)
+
+			 // .style('left', '0px')
+  	svg_title_1.style('left', centralize(screen_width,  svg_title_1.select('text').text().length*16.6))
+               .style('width', svg_title_1.select('text').text().length*17)
+
+	yAxis = d3.axisLeft()
+						.scale(yScale)
+
+	d3.select('svg')
+		.select('.chart_group')
+		.append('g')
+		// .attr('transform', 'translate(40,00)')
+		.attr('id', 'yAxisG')
+		.call(yAxis)
+
+}; // end draw_the_graph
+
+// 用來整個loading loop
+function showPage() {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("loader-text").style.display = "none";
+  document.getElementById("myDiv").style.display = "block";
+}
+
+//用來處理graph的distance
+function graph_distance(title_1_top, title_2_top, graph_title_distance, offset=0){
+		d3.select('.title_1')
+			.style('top', title_1_top + 'px')
+		d3.select('.graph_1')
+			.style('top', title_1_top + graph_title_distance + offset + 'px')
+		d3.select('.title_2')
+			.style('top', title_2_top + 'px')
+		d3.select('.graph_2')
+			.style('top', title_2_top + graph_title_distance + 'px')
+}
+
+if (which_one=='group'){
+	json_file = {{json|safe}}
+	draw_the_graph(json_file, svg_frame='svg.graph_1', svg_title='svg.title_1', x_title_text='小時', title_text='工時',  hour_or_salary='hour_classification', text_color='RGB(0,0,0)', graph_y_height='150')
+
+	draw_the_graph(json_file, svg_frame='svg.graph_2', svg_title='svg.title_2', x_title_text='港幣(千)', title_text='每月工資',  hour_or_salary='salary_classification', text_color='RGB(0,0,0)', graph_y_height='150')
+
+	var title_1_top = 290
+	var title_2_top = 500
+	var graph_title_distance = 30
+
+	graph_distance(title_1_top, title_2_top, graph_title_distance, offset=-50)
+
+} else if (which_one=='individual') {
+	function on() {
+		var raw_data = $('#job-form').serializeArray()
+		document.getElementById("overlay").style.display = "block";
+		console.log(raw_data);
+
+		function get_data_from_form(raw_data){
+			form_data = {
+				"company": raw_data[1]['value'],
+				"industry": raw_data[2]['value'],
+				"jobTitle": raw_data[3]['value'],
+				"location2": raw_data[4]['value'],
+				"salary_type":raw_data[5]['value'],
+				"working_day_number":raw_data[6]['value'],
+				"salary_period":raw_data[9]['value'],
+				"week_salary":raw_data[10]['value'],
+				"week_total_hour":raw_data[13]['value'],
+			}
+
+			$('.overlay-company').text(form_data["company"])
+			$('.overlay-industry').text(form_data["industry"])
+			$('.overlay-jobTitle').text(form_data["jobTitle"])
+			$('.overlay-location2').text(form_data["location2"])
+			$('.overlay-salary_type').text(form_data["salary_type"])
+			$('.overlay-week_total_hour').text(form_data["week_total_hour"])
+			$('.overlay-working_day_number').text(form_data["working_day_number"])
+			$('.overlay-week_salary').text(form_data["week_salary"])
+			return form_data
+		}
+
+		form_data=get_data_from_form(raw_data)
+
+
+
+	$.ajax({
+		url : "{% url 'added' %}", // the endpoint
+		type : "POST", // http method
+		data : {
+			csrfmiddlewaretoken: '{{ csrf_token }}',
+			"company": form_data['company'],
+			"industry": form_data['industry'],
+			"jobTitle": form_data['jobTitle'],
+			"location2": form_data['location2'],
+			"salary_type":form_data['salary_period'],
+			// "salary_period":form_data['salary_periody'],
+			"salary_period":raw_data[9]['value'],
+			"week_total_hour":form_data['week_total_hour'],
+			"working_day_number":form_data['workinworking_day_number'],
+			"salary":raw_data[10]['value'],
+
+		}, // data sent with the post request
+
+		// handle a successful response
+		success : function(json) {
+			// var data = json['json_classification']
+			var graph_height = 180
+			var title_1_top = 240
+			var title_2_top = 540
+			var graph_title_distance = 45
+			console.log('the json is:');
+			console.log(json);
+			draw_the_graph(json, svg_frame='svg.graph_1', svg_title='svg.title_1', x_title_text='小時', title_text='工時',  hour_or_salary='hour_classification', text_color="RGB(252, 238, 33)", graph_y_height=graph_height)
+
+			draw_the_graph(json, svg_frame='svg.graph_2', svg_title='svg.title_2', x_title_text='港幣(千元)', title_text='每月工資',  hour_or_salary='salary_classification', text_color="RGB(252, 238, 33)", graph_y_height=graph_height)
+
+
+
+			graph_distance(title_1_top, title_2_top, graph_title_distance)
+
+		},
+		error : function(xhr,errmsg,err) {
+				console.log('fuck')
+			}
+		});
+		}
+
+		function off() {
+				document.getElementById("overlay").style.display = "none";
+				d3.selectAll('g, text').remove();
+
+				document.getElementById("loader").style.display = "block";
+				document.getElementById("loader-text").style.display = "block";
+				document.getElementById("myDiv").style.display = "none";
+		}
+}// end if individual
+
+// 關閉overlay
+
+</script>
