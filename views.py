@@ -179,11 +179,11 @@ def added(request):
     hour_start_value = 0
     hour_color=None
 
-    if (form['salary_period']=='月薪'):
+    if (form['salary_period']==u'月薪'):
         salary_step = 2000
-    elif (form['salary_period']=='日薪'):
+    elif (form['salary_period']==u'日薪'):
         salary_step = 50
-    elif (form['salary_period']=='時薪'):
+    elif (form['salary_period']==u'時薪'):
         salary_step = 10
 
     # money
