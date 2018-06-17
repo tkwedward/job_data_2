@@ -113,12 +113,12 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
     try:
         range_min = int(math.floor(float(mini_list['minimum'])))
     except Exception as e:
-        print(e)
+        print(e, 'error in line 116')
         range_min=0
     try:
         range_max = int(math.ceil(float(max_list['maximum'])))
     except Exception as e:
-        print(e)
+        print(e, 'error in line 121')
         range_max=50
     global combine_length
     global combine_number
@@ -165,7 +165,8 @@ def added(request):
     form = request.POST.dict()
     print(form)
     category_model = labor_gov_model.filter(industry=form['industry'])
-
+    if form['agreement']==u'true':
+        print('yes')
     """傳送的data︰
     時間︰min, max, average
     組別︰category
@@ -252,30 +253,18 @@ def jobs_gov_data_detail(request, model_name, id):
 
         json_file = json.dumps(result_file)
         # json_file = json.dumps(result_file).replace("\\","").replace("\"[","[").replace("]\"","]")
-        print(json_file)
-
-
-
-
-
+        # print(json_file)
 
     return render(request, 'analysis.html', {'form': form,
     'hour_classification':hour_classification,
     'salary_classification':salary_classification,
     'category': form['industry'], 'json':json_file})
 
-
-
-    #
-    # return render(request, 'analysis.html', {'instance': instance, 'average':average, 'maximum':maximum, 'minimum':minimum, 'classification':classification, 'json_classification':json_classification, 'model':model_name, 'category': instance.category})
-
-
-
 # 用來在 search function 之中，找出想要display 出來的data list
 def get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by="", data_list_sort_by="", data_list=labor_gov_model):
-    print('I am using get_data_list')
+    # print('I am using get_data_list')
     if position:
-        print('filter by {}'.format(position))
+        # print('filter by {}'.format(position))
         data_list = data_list.filter(jobTitle__contains=position)
     if industry and industry!='all':
         data_list = data_list.filter(industry=industry)
@@ -299,7 +288,7 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
     return data_list
 
 def get_data_from_the_url(request):
-    print('I am using get_data_from_the_url')
+    # print('I am using get_data_from_the_url')
     position = request.GET.get('keyword')
     industry = request.GET.get('industry')
     location = request.GET.get('location')
@@ -309,7 +298,7 @@ def get_data_from_the_url(request):
     data_list_order_by = request.GET.get('order')
     data_list_sort_by = request.GET.get('type')
     page = request.GET.get('page', 1)
-    print(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page)
+    # print(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page)
     return position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page
 
 def get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by):

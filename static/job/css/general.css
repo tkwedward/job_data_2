@@ -7,7 +7,7 @@ a {
   margin-right: 10px; }
 
 input {
-  -webkit-appearance: textfield;
+  /* -webkit-appearance: textfield; */
   background-color: RGB(252, 238, 33);
   -webkit-rtl-ordering: logical;
   cursor: text;

@@ -1,5 +1,7 @@
 #coding=utf-8 #coding:utf-8#-*-
 
+AGREEMENT_CHOICE = [('no', u'不同意'), ('yes', u'同意')]
+
 DISTRICT_LIST = [
     ('', u'工作地點'),
     (u'中西區', u'中西區'),
