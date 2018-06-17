@@ -90,7 +90,7 @@ class FreelanceForm(forms.ModelForm):
 class ContactForm(forms.ModelForm):
 
     company = forms.CharField(
-    widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'公司名稱'}),
+    widget=forms.TextInput(attrs={'placeholder': u'公司名稱'}),
     )
 
     industry = forms.ChoiceField(widget=forms.Select(), choices=INDUSTRY_LIST, label='', initial='all')
@@ -139,11 +139,11 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model = collected_data
         widgets = {
-            'salary': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '薪資'}),
+            'salary': forms.TextInput(attrs={ 'placeholder': '薪資'}),
 
-            'email': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '電郵'}),
+            'email': forms.TextInput(attrs={ 'placeholder': '電郵'}),
 
-            'OT': forms.TextInput(attrs={'class': 'form-control', 'value':'seldom'}),
+            'OT': forms.TextInput(attrs={'value':'seldom'}),
 # label='Overtime_human_read'
         }
 

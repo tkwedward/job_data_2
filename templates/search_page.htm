@@ -1,6 +1,6 @@
 {% load static %}
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="{% static 'job/css/check_salary.css' %}" />
+
 	<link rel="stylesheet" type="text/css" href="{% static 'job/css/nouislider.min.css' %}" />
 	<script src="{% static 'job/jquery/nouislider.min.js' %}"></script>
 	<script src="{% static 'job/jquery/wNumb.js' %}"></script>
@@ -10,26 +10,32 @@
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <div style="position:absolute; left:0px; top:0px; width:1280px; height:960px;">
 {% include 'navbar.htm' %}
+
+<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_15.jpg' %}); position:absolute; left:994px; top:211px; width:9px; height:74px;" title="">
+</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_02.jpg' %}); position:absolute; left:0px; top:42px; width:1280px; height:23px;" title="">
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_03.jpg' %}); position:absolute; left:0px; top:65px; width:64px; height:895px;" title="">
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_04.jpg' %}); position:absolute; left:64px; top:65px; width:292px; height:129px;" title="">
-		如何使用這個網站？
+		<h1>如何使用<br>這個網站？</h1>
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_05.jpg' %}); position:absolute; left:356px; top:65px; width:924px; height:2px;" title="">
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_06.jpg' %}); position:absolute; left:356px; top:67px; width:36px; height:361px;" title="">
 	</div>
+	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_35.jpg' %}); position:absolute; left:392px; top:319px; width:304px; height:109px;" title="">
+	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_07.jpg' %}); position:absolute; left:392px; top:67px; width:304px; height:252px;" title="">
-		現時，網路上各工種的資訊，不是由僱主在求職網提供，便是由政府作統計調查。可是，僱員每天面對的工作環境，加班、拖糧等刻薄手段，當然只有僱員自己才最清楚！要讓大家警惕，並識別出無良僱主，各行各業打工仔的互助便十分重要。透過工時、工資、加班時數等資訊的流通，團結抵抗無良僱主就事半功倍！
+		<p style="z-index:10">現時，網路上各工種的資訊，不是由僱主在求職網提供，便是由政府作統計調查。可是，僱員每天面對的工作環境，加班、拖糧等刻薄手段，當然只有僱員自己才最清楚！要讓大家警惕，並<br>識別出無良僱主，各行各業打工<br>仔的互助便十分重要。透過工<br>時、工資、加班時數等資訊<br>的流通，團結抵抗無良僱<br>主就事半功倍！
+		</p>
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_08.jpg' %}); position:absolute; left:696px; top:67px; width:584px; height:88px;" title="">
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_09.jpg' %}); position:absolute; left:696px; top:155px; width:31px; height:273px;" title="">
 	</div>
-	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_10.jpg' %}); position:absolute; left:727px; top:155px; width:177px; height:29px;" title="">
-		其他職位搜尋
+	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_10.jpg' %}); position:absolute; left:727px; top:155px; z-index:2;" title="">
+	<h2>其他職位搜尋</h2>
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_11.jpg' %}); position:absolute; left:904px; top:155px; width:376px; height:56px;" title="">
 	</div>
@@ -38,8 +44,7 @@
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_13.jpg' %}); position:absolute; left:64px; top:194px; width:292px; height:191px;" title="">
 	</div>
 
-	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_15.jpg' %}); position:absolute; left:994px; top:211px; width:9px; height:74px;" title="">
-	</div>
+
 
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_17.jpg' %}); position:absolute; left:1189px; top:211px; width:91px; height:217px;" title="">
 	</div>
@@ -94,8 +99,7 @@
 
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_34.jpg' %}); position:absolute; left:727px; top:311px; width:58px; height:117px;" title="">
 	</div>
-	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_35.jpg' %}); position:absolute; left:392px; top:319px; width:304px; height:109px;" title="">
-	</div>
+
 	<div id="search_top" style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_36.jpg' %}); position:absolute; left:862px; top:355px; width:327px; height:73px;" title="">
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_37.jpg' %}); position:absolute; left:64px; top:385px; width:22px; height:575px;" title="">
@@ -123,12 +127,12 @@
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_48.jpg' %}); position:absolute; left:276px; top:428px; width:8px; height:532px;" title="">
 	</div>
-	<div class="job_row_header job_row_header_company" style="position:absolute; left:284px; top:428px;" title="">
+	<div class="job_row_header job_row_header_company" style="position:absolute; left:284px; top:428px; width:300px; height: 26px" title="">
 		公司名稱
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_50.jpg' %}); position:absolute; left:645px; top:428px; width:7px; height:373px;" title="">
 	</div>
-	<div class="job_row_header job_row_header_location2" style="position:absolute; top:428px;" title="">
+	<div class="job_row_header job_row_header_location2" style="position:absolute; left:590px; top:428px; width:145px; height:26px;" title="">
 		地點
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_52.jpg' %}); position:absolute; left:735px; top:428px; width:7px; height:532px;" title="">
@@ -202,9 +206,7 @@
 {% include 'data_table.html' %}
 </div>
 </body>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
  <script>
 	var order = ""
 	var type = ""
@@ -266,4 +268,5 @@
    }); // end of ajax
    })
  </script>
+ <link rel="stylesheet" type="text/css" href="{% static 'job/css/check_salary.css' %}" />
 </html>

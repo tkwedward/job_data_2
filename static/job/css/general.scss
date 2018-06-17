@@ -10,8 +10,8 @@ a{
   }
 }
 
-input {
-  -webkit-appearance: textfield;
+input{
+  // -webkit-appearance: textfield;
   background-color: RGB(252, 238, 33);
   -webkit-rtl-ordering: logical;
   cursor: text;
@@ -24,16 +24,32 @@ input {
   padding: 5px;
 }
 
+input[type=checkbox]{
+  margin-right: 10px;
+}
+
 select{
   background-color: RGB(252, 238, 33);
   border-width: 0px;
   border-style: solid;
   border-color: RGB(252, 238, 33);
   border-image: initial;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  // -webkit-appearance: none;
+  // -moz-appearance: none;
   height: 26px;
   padding: 5px;
+  }
+
+select#id_job_type{
+  width:65px
+}
+
+
+.tri{
+  float: right;
+  position: relative;
+  right: 5px;
+
 }
 
 .job_row_box{
@@ -46,33 +62,69 @@ select{
   }
 }
 
+
+
 div {
   font-family: "source-han-serif-tc";
   }
 
-  #overlay {
-      position: fixed;
-      display: none;
-      width: 100%;
-      height: 100%;
-      overflow-y: scroll;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0,0,0,0.8);
-      z-index: 2;
-      .close-button{
-        cursor: pointer;
-      }
-
-      .overlay-button-label{
-        color: white
-      }
-
-      .overlay-button{
-        color: black;
-        background-color: RGB(252, 238, 33);
-
-      }
+  .job_row_box_location2{
+    left:505px;
+    width: 142px;
   }
+  // .job_row_header_money
+  // .job_row_header_industry
+  // .job_row_header_week_total_hour
+  // .job_row_header_working_day_number
+
+  .job_row_header{
+    background: RGB(252, 238, 33);
+  }
+
+  .tri{
+    float: right;
+    position: relative;
+    right: 5px;
+
+  }
+
+  .job_row_box{
+    background: RGB(83,71,65);
+    font-size: 12px;
+    color:RGB(252, 238, 33);
+    a{
+      text-decoration:none;
+      color:RGB(252, 238, 33);
+    }
+  }
+
+  div {
+    font-family: "source-han-serif-tc";
+    }
+
+    #overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.8);
+        z-index: 2;
+        .close-button{
+          cursor: pointer;
+        }
+
+        .overlay-button-label{
+          color: white
+        }
+
+        .overlay-button{
+          color: black;
+          background-color: RGB(252, 238, 33);
+
+        }
+    }
