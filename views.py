@@ -20,6 +20,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from collections import OrderedDict
 # 製造頁面
 from itertools import chain
+from .important_list import TYPES_CHOICES
 
 
 collected_data_model = collected_data.objects.all()
@@ -99,13 +100,15 @@ category_model=None
 def statistic(type, field1, data_list, model=None, form=None, step=None):
     # 這裏的field1 是薪金形態
     if type == 'salary':
-        model_used = model.filter(salary_type=form['salary_period'])
+        model_used = model.filter(salary_type=form['salary_type'])
     model_used = model.filter(salary_type='月薪')
     # 這裏的field1是 money或是 week_total_hour
     # avg =model_used.aggregate(average=Avg(field1))
     max_list = model_used.aggregate(maximum=Max(field1))
     mini_list = model_used.aggregate(minimum=Min(field1))
     print('max_list:{}, mini_list:{}'.format(max_list, mini_list))
+    print(type)
+    print(form)
     # 這裏是想取回這個例子的instance，例如清潔工的工作時間和人工是多少
     instance_data = float(form[type])
 
@@ -126,13 +129,13 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
     combine_number = set()
     max_bar = 13
     # the following is for data generation
-    print('step', 'x', 'x+step', 'instance_data', 'color')
+
     for counter ,x in enumerate(range(0, range_max, step)):
         if instance_data>=float(x) and instance_data<float(x+step):
             color = 'RGB(247,147,30)'
         else:
             color = 'RGB(252, 238, 33)'
-        print(step, float(x), float(x+step), instance_data, color)
+
         if type == 'salary':
             if counter > max_bar:
                 combine_number.add(math.floor(x/1000))
@@ -145,11 +148,10 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
         else:
             length = len(model.filter(week_total_hour__gte=float(x-step)).filter(week_total_hour__lt=float(x+step)))
             data_list.append({'range':'{}-{}'.format(x, x+step), 'number':length, 'color':color})
-    print(type, data_list, max_bar, combine_number)
+
 
     if type == 'salary' and len(data_list)>max_bar:
         last_item = '{}以上'.format(min(combine_number))
-        print(last_item, combine_length)
         data_list.append({'range':last_item, 'number':combine_length, 'color':color})
         # print({'range':'{}-{}'.format(x, x+step), 'number':length, 'color':color})
         # salary_classification.append({'range':'{}-{}'.format(x, x+5000), 'number':length, 'color':color})
@@ -163,11 +165,31 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
 @require_POST
 def added(request):
     form = request.POST.dict()
-    print(form)
+    print(datetime.datetime.now().date())
     category_model = labor_gov_model.filter(industry=form['industry'])
+
     if form['agreement']==u'true':
-        print('yes')
-    """傳送的data︰
+        b = collected_data(
+            company=form['company'], # 公司名稱
+            industry=form['industry'], # 行業
+            jobTitle=form['jobTitle'], #
+            location2=form['location2'],
+            salary_type=form['salary_type'],# 工作形態
+            job_type=form['salary_type'],# 工作形態
+            gender=form['gender'],#性別
+            latest_year=form['latest_year'],
+            salary=form['salary'],
+            contract_week_hour=form['contract_week_hour'],
+            year_of_working=form['year'],
+            week_total_hour=form['week_total_hour'],
+            OT_frequency=form['OT_frequency'],
+            OT_payment=form['OT_payment'],
+            working_day_number=form['working_day_number'],
+            date=datetime.datetime.now().date()
+        )
+        b.save()
+    """
+    傳送的data︰
     時間︰min, max, average
     組別︰category
     """
@@ -180,11 +202,11 @@ def added(request):
     hour_start_value = 0
     hour_color=None
 
-    if (form['salary_period']==u'月薪'):
+    if (form['salary_type']==u'月薪'):
         salary_step = 2000
-    elif (form['salary_period']==u'日薪'):
+    elif (form['salary_type']==u'日薪'):
         salary_step = 50
-    elif (form['salary_period']==u'時薪'):
+    elif (form['salary_type']==u'時薪'):
         salary_step = 10
 
     # money

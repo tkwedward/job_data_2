@@ -114,7 +114,6 @@ class ContactForm(forms.ModelForm):
     # 你最近從事這份工作的年份
     latest_year = forms.CharField(widget=forms.TextInput(attrs={'placeholder': u'你最近從事這份工作的年份（例如由2014年做到2016年，請填2016；如現正從事這份工作，請填2017年）'}))
 
-
     # 支薪周期
     salary_period = forms.ChoiceField(widget=forms.Select(), choices=SALARY_TYPE_LIST, label='')
 

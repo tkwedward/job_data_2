@@ -73,38 +73,53 @@ class Job_detail(models.Model):
 
 class collected_data(models.Model):
     time_stamp = models.CharField(max_length=50, blank=True, null=True)
-
+    # 1
     company = models.CharField(max_length=50)
 
+    # 2
+    industry = models.CharField(max_length=20,choices=INDUSTRY_LIST, blank=True, null=True)
+
+    # 3
     jobTitle = models.CharField(max_length=50)
 
-    # 地點
+    # 4. 地點
     location2 = models.CharField(max_length=50, blank=True)
 
-    # 工作形態
-    job_type = models.CharField(max_length=50, choices=TYPES_CHOICES)
+    # 5. 工作形態
+    salary_type = models.CharField(max_length=50, choices=SALARY_TYPE_LIST, blank=True, null=True)
+    job_type = models.CharField(max_length=50, choices=TYPES_CHOICES, blank=True, null=True)
 
+    # 6. 每周工作天數
+    working_day_number = models.FloatField(blank=True, null=True)
+
+    # 7. 性別
     gender = models.CharField(max_length=5, choices=SEX_CHOICES)
 
-    latest_year = models.FloatField(blank=True, null=True)
+    # 8. 最近工作年份
+    latest_year = models.CharField(blank=True, null=True, max_length=100)
 
+    # 10. 薪金
     salary = models.FloatField(blank=True, null=True)
 
-    year = models.FloatField(blank=True, null=True)
+    # 11. 年資
+    year_of_working = models.FloatField(blank=True, null=True)
 
-    week_total_hour = models.FloatField(blank=True, null=True)
-
-    OT_frequency = models.CharField(max_length=20,choices=OT_CHOICES)
-
-    OT_payment = models.CharField(max_length=50, choices=OTP_CHOICES)
-
-    email = models.EmailField(blank=True, null=True)
-
-    date = models.DateField(default=datetime.today())
-
+    # 12. 合約每週工時
     contract_week_hour = models.FloatField(blank=True, null=True)
 
-    salary_period = models.CharField(max_length=50)
+    # 13. 實際每週工時
+    week_total_hour = models.FloatField(blank=True, null=True)
+
+    # 14.
+    OT_frequency = models.CharField(max_length=20,choices=OT_CHOICES)
+
+    # 15.
+    OT_payment = models.CharField(max_length=50, choices=OTP_CHOICES)
+
+    # 交form的日子
+    date = models.DateField()
+
+    email = models.EmailField(blank=True, null=True)
 
     account_identify = models.CharField(max_length=50, null=True, blank=True)
 
@@ -123,9 +138,7 @@ class labor_gov(models.Model):
     location = models.CharField(max_length=50)
     industry = models.CharField(max_length=50)
     responsibility = models.TextField()
-
     treatment = models.TextField()
-
     category = models.CharField(max_length=10, null=True)
     exported = models.BooleanField(default=False)
     money3 = models.CharField(max_length=50, blank=True)

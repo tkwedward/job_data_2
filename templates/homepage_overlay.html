@@ -247,12 +247,19 @@ if (which_one=='group'){
 				"industry": raw_data[2]['value'],
 				"jobTitle": raw_data[3]['value'],
 				"location2": raw_data[4]['value'],
-				"salary_type":raw_data[5]['value'],
+				"job_type":raw_data[5]['value'],
 				"working_day_number":raw_data[6]['value'],
-				"salary_period":raw_data[9]['value'],
-				"week_salary":raw_data[10]['value'],
+        "gender":raw_data[7]['value'],
+        "latest_year":raw_data[8]['value'],
+				"salary_type":raw_data[9]['value'],
+				"salary":raw_data[10]['value'],
+        "year":raw_data[11]['value'],
+        "contract_week_hour":raw_data[12]['value'],
 				"week_total_hour":raw_data[13]['value'],
+				"OT_frequency":raw_data[14]['value'],
+				"OT_payment":raw_data[15]['value'],
 			}
+      console.log(form_data);
 
 			$('.overlay-company').text(form_data["company"])
 			$('.overlay-industry').text(form_data["industry"])
@@ -268,22 +275,27 @@ if (which_one=='group'){
 		form_data=get_data_from_form(raw_data)
 
 
-
 	$.ajax({
 		url : "{% url 'added' %}", // the endpoint
 		type : "POST", // http method
 		data : {
 			csrfmiddlewaretoken: '{{ csrf_token }}',
-			"company": form_data['company'],
-			"industry": form_data['industry'],
+      "company": form_data['company'],
 			"jobTitle": form_data['jobTitle'],
-			"location2": form_data['location2'],
-			"salary_type":form_data['salary_period'],
-			// "salary_period":form_data['salary_periody'],
-			"salary_period":raw_data[9]['value'],
-			"week_total_hour":form_data['week_total_hour'],
-			"working_day_number":form_data['workinworking_day_number'],
-			"salary":raw_data[10]['value'],
+      "location2": form_data['location2'],
+      "industry": form_data['industry'],
+      "salary_type":form_data['salary_type'],
+      "job_type":form_data['job_type'],
+      "gender":form_data['gender'],
+      "latest_year":form_data['latest_year'],
+      "salary":form_data['salary'],
+      "year":form_data['year'], // 工作年資
+      "week_total_hour":form_data['week_total_hour'],
+      "OT_frequency":form_data['OT_frequency'],
+      "OT_payment":form_data['OT_payment'],
+      "contract_week_hour":form_data['contract_week_hour'],
+			"working_day_number":form_data['working_day_number'
+      ],
       "agreement":$('#agreement').is(':checked')
 
 
