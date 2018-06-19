@@ -122,6 +122,19 @@
 	</div>
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_46.jpg' %}); position:absolute; left:221px; top:412px; width:57px; height:16px;" title="">
 	</div>
+
+	<div class="job_row_model_filter" style="position:absolute; left:86px; top:388px;" title="">
+		<!-- 這裏的datapage 是用來keep track 現在是第幾頁，這是用javascript 中的 page function時有用的 -->
+		<span class='selected' data-page=1 data-link="job_gov_data">只顯示勞工署 </span>
+
+		<span class='' data-link="collected_data" data-page=1>只顯示用戶輸入的資料 </span>
+
+		<span class='' data-link="both" data-page=1>混合顯示 </span>
+	</div>
+
+
+
+
 	<div class="job_row_header job_row_header_jobTitle" style="position:absolute; left:86px; top:428px; width:190px; height:26px;" title="">
 		職位
 	</div>
@@ -208,6 +221,13 @@
 </body>
 
  <script>
+	// 只顯示勞工署, 只顯示用戶輸入的資料, 混合顯示三個選項的function
+	 $('.job_row_model_filter span').click(function(){
+		 $('.job_row_model_filter span').attr('class','')
+		 $(this).attr('class', 'selected')
+	 })
+
+ // 用於三角形 sorting
 	var order = ""
 	var type = ""
    $('.tri').click(function(){
@@ -269,4 +289,5 @@
    })
  </script>
  <link rel="stylesheet" type="text/css" href="{% static 'job/css/check_salary.css' %}" />
+ <link rel="stylesheet" type="text/css" href="{% static 'job/css/search_page.css' %}" />
 </html>

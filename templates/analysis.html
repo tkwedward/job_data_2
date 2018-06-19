@@ -85,12 +85,13 @@
   <svg class='graph graph-detail' style="position:absolute; left:318px; top:323px; width:640px; height:480px;"></svg>
 
 
-<div class='overlay-button' style=" position:absolute; left:517px; top:826px; width:248px; height:56.974px; background:RGB(153,134,117);">
-</div>
+<div class='analysis-button' style=" position:absolute; left:517px; top:826px; width:248px; height:56.974px;">
 
-<div style="position:absolute; left:536px; top:836px; width:220px; height:28px; font-size:25px; color:RGB(252, 238, 33)" >
+</div>
+<div class='analysis-button-text' style="position:absolute; left:536px; top:836px; width:220px; height:28px; " >
   <a href="{% url 'jobs_gov_data' %}">搜尋/分析其他職位</a>
 </div>
+
 
 </div> <!-- class="container latest-bg-2" -->
 
@@ -139,3 +140,5 @@
 	height: 240px;
 }
 </style>
+
+<link rel="stylesheet" type="text/css" href="{% static 'job/css/analysis_page.css' %}" />

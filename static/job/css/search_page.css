@@ -1,0 +1,13 @@
+.job_row_model_filter span {
+  padding: 5px;
+  margin-right: 8px;
+  background-color: RGB(83, 71, 65);
+  text-decoration: none;
+  color: RGB(252, 238, 33); }
+.job_row_model_filter span:hover {
+  cursor: pointer; }
+.job_row_model_filter span.selected {
+  background-color: RGB(252, 238, 33);
+  color: RGB(0, 0, 0); }
+
+/*# sourceMappingURL=search_page.css.map */

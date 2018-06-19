@@ -23,7 +23,7 @@ urlpatterns = [
 
 
     # show jobs
-    url(r'^jobs_gov_data$', jobs_gov_data, name="jobs_gov_data"),
+    url(r'^data$', jobs_gov_data, name="jobs_gov_data"),
     # url(r'^add_json_data$', add_json_data, name="add_json_data"),
 
 

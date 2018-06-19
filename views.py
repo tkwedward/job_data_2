@@ -99,16 +99,16 @@ category_model=None
 
 def statistic(type, field1, data_list, model=None, form=None, step=None):
     # 這裏的field1 是薪金形態
+
     if type == 'salary':
-        model_used = model.filter(salary_type=form['salary_type'])
+        # model_used = model.filter(salary_type=form['salary_type'])
+        pass
+        # model_used = model
     model_used = model.filter(salary_type='月薪')
     # 這裏的field1是 money或是 week_total_hour
     # avg =model_used.aggregate(average=Avg(field1))
     max_list = model_used.aggregate(maximum=Max(field1))
     mini_list = model_used.aggregate(minimum=Min(field1))
-    print('max_list:{}, mini_list:{}'.format(max_list, mini_list))
-    print(type)
-    print(form)
     # 這裏是想取回這個例子的instance，例如清潔工的工作時間和人工是多少
     instance_data = float(form[type])
 
@@ -141,17 +141,17 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
                 combine_number.add(math.floor(x/1000))
                 combine_number.add(math.floor((x+step)/1000))
                 sorted(combine_number, key=float)
-                combine_length+= len(model.filter(money__gte=float(x)).filter(money__lt=float(x+step)))
+                combine_length+= len(model.filter(salary__gte=float(x)).filter(salary__lt=float(x+step)))
             else:
-                length = len(model.filter(money__gte=float(x)).filter(money__lt=float(x+step)))
-                data_list.append({'range':'{}-{}'.format(math.floor(x/1000), math.floor((x+step)/1000)), 'number':length, 'color':color})
+                length = len(model.filter(salary__gte=float(x)).filter(salary__lt=float(x+step)))
+                data_list.append({'range':'{}-{}'.format(int(math.floor(x/1000)), int(math.floor((x+step)/1000))), 'number':length, 'color':color})
         else:
             length = len(model.filter(week_total_hour__gte=float(x-step)).filter(week_total_hour__lt=float(x+step)))
             data_list.append({'range':'{}-{}'.format(x, x+step), 'number':length, 'color':color})
 
 
     if type == 'salary' and len(data_list)>max_bar:
-        last_item = '{}以上'.format(min(combine_number))
+        last_item = '{}以上'.format(int(min(combine_number)))
         data_list.append({'range':last_item, 'number':combine_length, 'color':color})
         # print({'range':'{}-{}'.format(x, x+step), 'number':length, 'color':color})
         # salary_classification.append({'range':'{}-{}'.format(x, x+5000), 'number':length, 'color':color})
@@ -165,7 +165,6 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
 @require_POST
 def added(request):
     form = request.POST.dict()
-    print(datetime.datetime.now().date())
     category_model = labor_gov_model.filter(industry=form['industry'])
 
     if form['agreement']==u'true':
@@ -210,7 +209,7 @@ def added(request):
         salary_step = 10
 
     # money
-    salary_classification = json.dumps(statistic(type='salary', field1='money', data_list=salary_classification, model=category_model, form=form, step=salary_step))
+    salary_classification = json.dumps(statistic(type='salary', field1='salary', data_list=salary_classification, model=category_model, form=form, step=salary_step))
 
     # working hour
     hour_classification = json.dumps(statistic(type='week_total_hour', field1='week_total_hour', data_list=hour_classification, model=category_model, form=form, step=hour_step))
@@ -230,52 +229,46 @@ def success(request):
 def jobs_gov_data_detail(request, model_name, id):
     if model_name == 'collected_data':
         instance = get_object_or_404(collected_data, id=id)
-        average = None
-        maximum = None
-        minimum = None
-        classification = None
-        json_classification =None
     else:
         instance = get_object_or_404(labor_gov, id=id)
-        salary_classification = []
-        salary_step = 2000
-        salary_start_value = None
-        salary_color=None
-        hour_classification = []
-        hour_step = 5
-        hour_start_value = 0
-        hour_color=None
-        form = {
-            'company': instance.company,
-            'industry': instance.industry,
-            'jobTitle':instance.jobTitle,
-            'place': instance.location2,
-            'salary_period': instance.salary_type,
-            'date_number': instance.working_day_number,
-            'week_total_hour': instance.week_total_hour,
-            'salary': instance.money,
+    salary_classification = []
+    salary_step = 2000
+    salary_start_value = None
+    salary_color=None
+    hour_classification = []
+    hour_step = 5
+    hour_start_value = 0
+    hour_color=None
+
+    form = {
+        'company': instance.company,
+        'industry': instance.industry,
+        'jobTitle':instance.jobTitle,
+        'place': instance.location2,
+        'salary_period': instance.salary_type,
+        'date_number': instance.working_day_number,
+        'week_total_hour': instance.week_total_hour,
+        'salary': instance.salary,
+    }
+
+
+    category_model = labor_gov_model.filter(category=instance.category)
+
+    # money
+    salary_classification = json.dumps(statistic(type='salary', field1='salary', data_list=salary_classification, model=category_model, form=form, step=salary_step))
+
+    # working hour
+    hour_classification = json.dumps(statistic(type='week_total_hour', field1='week_total_hour', data_list=hour_classification, model=category_model, form=form, step=hour_step))
+
+    result_file = {
+        'hour_classification':hour_classification,
+        'salary_classification':salary_classification,
+        'category': form['industry']
         }
 
-
-        category_model = labor_gov_model.filter(category=instance.category)
-
-        # money
-        salary_classification = json.dumps(statistic(type='salary', field1='money', data_list=salary_classification, model=category_model, form=form, step=salary_step))
-
-        # working hour
-        hour_classification = json.dumps(statistic(type='week_total_hour', field1='week_total_hour', data_list=hour_classification, model=category_model, form=form, step=hour_step))
-        # print(hour_classification)
-        # print(salary_classification)
-
-        result_file = {
-            'hour_classification':hour_classification,
-            'salary_classification':salary_classification,
-            'category': form['industry']
-            }
-
-        json_file = json.dumps(result_file)
-        # json_file = json.dumps(result_file).replace("\\","").replace("\"[","[").replace("]\"","]")
-        # print(json_file)
+    json_file = json.dumps(result_file)
+    # json_file = json.dumps(result_file).replace("\\","").replace("\"[","[").replace("]\"","]")
+    # print(json_file)
 
     return render(request, 'analysis.html', {'form': form,
     'hour_classification':hour_classification,
@@ -283,8 +276,17 @@ def jobs_gov_data_detail(request, model_name, id):
     'category': form['industry'], 'json':json_file})
 
 # 用來在 search function 之中，找出想要display 出來的data list
-def get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by="", data_list_sort_by="", data_list=labor_gov_model):
+def get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by="", data_list_sort_by="", model_name=""):
     # print('I am using get_data_list')
+    print("my model_name is " + str(model_name))
+    data_list = None
+    if model_name=='job_gov_data':
+        data_list = labor_gov_model
+    elif model_name=='collected_data':
+        data_list = collected_data_model
+    elif model_name=='both':
+        data_list = collected_data_model
+
     if position:
         # print('filter by {}'.format(position))
         data_list = data_list.filter(jobTitle__contains=position)
@@ -295,7 +297,7 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
     if salary_type:
         data_list = data_list.filter(salary_type=salary_type)
     if upper_limit and lower_limit:
-        data_list = data_list.filter(money__gte=lower_limit).filter(money__lte=upper_limit)
+        data_list = data_list.filter(salary__gte=lower_limit).filter(salary__lte=upper_limit)
 
     data_list_order_by = "" if data_list_order_by is None else data_list_order_by
 
@@ -320,8 +322,9 @@ def get_data_from_the_url(request):
     data_list_order_by = request.GET.get('order')
     data_list_sort_by = request.GET.get('type')
     page = request.GET.get('page', 1)
+    model_name = request.GET.get('model_name')
     # print(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page)
-    return position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page
+    return position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name
 
 def get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by):
     paginator_link = "keyword={}&industry={}&location={}&salary_type={}&upper_limit={}&lower_limit={}&data_list_order_by={}&data_list_sort_by={}".format(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
@@ -352,12 +355,13 @@ def get_Paginator(data_list, request, page_from_link=None):
 
 def jobs_gov_data(request):
     search_form = Search_Bar_Form()
+    model_used=labor_gov_model
 
-    position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page = get_data_from_the_url(request)
+    position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
 
     paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
 
-    data_list = labor_gov.objects.exclude(week_total_hour=0.0)
+    data_list = model_used.exclude(week_total_hour=0.0)
 
     data_show, show_page_list = get_Paginator(data_list, request, page)
 
@@ -369,20 +373,20 @@ def jobs_gov_data(request):
 
 
 def get_search(request, position="", industry="", location="", salary="", salary_type="", salary_filter="", data_list_order_by="", data_list_sort_by="", page_from_link=1):
-
+    print(request.build_absolute_uri())
     data_list = []
     if request.is_ajax():
         print(request.GET.get('keyword'))
         print('I am using ajax')
-        position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page = get_data_from_the_url(request)
+        position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
         # symbol = request.GET.get('symbol')
-        print(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page)
+        # print(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page)
 
         paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
-        print(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by)
+        # print(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by)
 
 
-        data_list = get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by)
+        data_list = get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by, model_name)
 
         """paginator"""
         data_show, show_page_list = get_Paginator(data_list, request, page)
@@ -397,17 +401,17 @@ def get_search(request, position="", industry="", location="", salary="", salary
         # return HttpResponse(json.dumps({'html':html}), content_type='application/json')
         # return render(request, 'search_page.htm', {})
     else:
-        print('-------------------')
-        print('I am using get_search function and not ajax')
-        print('-------------------')
+        # print('-------------------')
+        # print('I am using get_search function and not ajax')
+        # print('-------------------')
         search_form = Search_Bar_Form(request.GET)
-        position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page = get_data_from_the_url(request)
+        position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
         # symbol = request.GET.get('symbol')
         # data_get_list = [position, industry, location, upper_limit, lower_limit, salary_type]
 
         paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
 
-        data_list = get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by)
+        data_list = get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by, model_name)
 
         """paginator"""
         data_show, show_page_list = get_Paginator(data_list, request, page_from_link)

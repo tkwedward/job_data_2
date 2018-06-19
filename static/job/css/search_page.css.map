@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACE,0BAAI;EACF,OAAO,EAAE,GAAG;EACZ,YAAY,EAAE,GAAG;EACjB,gBAAgB,EAAE,eAAe;EACjC,eAAe,EAAE,IAAI;EACrB,KAAK,EAAC,iBAAiB;AAGzB,gCAAU;EACR,MAAM,EAAE,OAAO;AAGjB,mCAAa;EACX,gBAAgB,EAAE,iBAAiB;EACnC,KAAK,EAAE,YAAU",
+"sources": ["search_page.scss"],
+"names": [],
+"file": "search_page.css"
+}

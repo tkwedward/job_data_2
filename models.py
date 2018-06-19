@@ -76,8 +76,9 @@ class collected_data(models.Model):
     # 1
     company = models.CharField(max_length=50)
 
-    # 2
+    # 2 即是industry
     industry = models.CharField(max_length=20,choices=INDUSTRY_LIST, blank=True, null=True)
+    category = models.CharField(max_length=20,choices=INDUSTRY_LIST, blank=True, null=True)
 
     # 3
     jobTitle = models.CharField(max_length=50)
@@ -141,8 +142,8 @@ class labor_gov(models.Model):
     treatment = models.TextField()
     category = models.CharField(max_length=10, null=True)
     exported = models.BooleanField(default=False)
-    money3 = models.CharField(max_length=50, blank=True)
-    money = models.FloatField(blank=True, null=True)
+    salary3 = models.CharField(max_length=50, blank=True)
+    salary = models.FloatField(blank=True, null=True)
     salary_type = models.CharField(max_length=10, blank=True)
     working_date = models.CharField(max_length=50, blank=True)
     location2 = models.CharField(max_length=50, blank=True)

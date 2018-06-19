@@ -2,10 +2,12 @@
 	<div id="keypress" class="noUi-target noUi-rtl noUi-horizontal">
   </div>
 </div>
+
 <div>
-	<input type="text" id="input-with-keypress-1" value={{ form.lower_limit }}>
-	<input type="text" style="position:absolute; left: 145px;" id="input-with-keypress-0" value={{ form.upper_limit }}>
+	<input type="text" id="input-with-keypress-1" value={{ form.lower_limit }}/>
+	<input type="text" style="position:absolute; left: 145px;" id="input-with-keypress-0" value={{ form.upper_limit }}/>
 </div>
+
 <script>
 var keypressSlider = document.getElementById('keypress');
 var input1 = document.getElementById('input-with-keypress-1');
@@ -88,4 +90,4 @@ inputs.forEach(function(input, handle) {
 		}
 	});
 });
-</script>		</div>
+</script>
