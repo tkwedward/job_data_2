@@ -21,7 +21,9 @@ from collections import OrderedDict
 # 製造頁面
 from itertools import chain
 from .important_list import TYPES_CHOICES
-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 collected_data_model = collected_data.objects.all()
 labor_gov_model = labor_gov.objects.exclude(working_hours_number=None).exclude(working_hours_number='').exclude(week_total_hour=0.0)
@@ -277,15 +279,17 @@ def jobs_gov_data_detail(request, model_name, id):
 
 # 用來在 search function 之中，找出想要display 出來的data list
 def get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by="", data_list_sort_by="", model_name=""):
+
     # print('I am using get_data_list')
-    print("my model_name is " + str(model_name))
-    data_list = None
+    # print("my model_name is " + str(model_name))
+    data_list = labor_gov_model
     if model_name=='job_gov_data':
         data_list = labor_gov_model
     elif model_name=='collected_data':
         data_list = collected_data_model
     elif model_name=='both':
         data_list = collected_data_model
+
 
     if position:
         # print('filter by {}'.format(position))
@@ -327,6 +331,7 @@ def get_data_from_the_url(request):
     return position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name
 
 def get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by):
+    print("here is the position:"+position)
     paginator_link = "keyword={}&industry={}&location={}&salary_type={}&upper_limit={}&lower_limit={}&data_list_order_by={}&data_list_sort_by={}".format(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
     return paginator_link
 
