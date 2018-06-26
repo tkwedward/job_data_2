@@ -28,7 +28,8 @@ select {
   border-color: RGB(252, 238, 33);
   border-image: initial;
   height: 26px;
-  padding: 5px; }
+  padding: 0px;
+  padding-left: 8px; }
 
 select#id_job_type {
   width: 65px; }

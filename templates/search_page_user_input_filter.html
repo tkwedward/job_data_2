@@ -1,0 +1,46 @@
+<script>
+  function data_table_generator(selector){
+    var position = $('#id_keyword').val()
+    var industry = $('#id_industry').val()
+    var location = $('#id_location').val()
+    var upper_limit = $('#input-with-keypress-0').val()
+    var lower_limit = $('#input-with-keypress-1').val()
+    var salary_type = $('#id_salary_type').val()
+    var page = selector.attr('data-page')
+    var model_name = $('span.selected').data('link')
+    data = {
+      'keyword':position,
+      'industry':industry,
+      'location':location,
+      'upper_limit':upper_limit,
+      'lower_limit':lower_limit,
+      'salary_type':salary_type,
+      'order':order,
+      'type':type,
+      'page':page,
+      'model_name':model_name,
+      // 'symbol':symbol
+    }
+    $.ajax({
+      type: "GET",
+      url: "{% url 'search' %}",
+      data: data,
+      //這裏的result是一個記錄了由 template render generate 出來的 table list 內容
+      success: function(result) {
+
+          //根據 search form 和排列次序，更新data table中的html
+          k =result['html']
+          $(".data_table_bundle").html(k)
+        }
+  }); // end of ajax
+  }
+
+  $('.job_row_model_filter span').click(function(){
+    $('.job_row_model_filter span').attr('class','')
+    $(this).attr('class', 'selected')
+    // 上面的function
+    data_table_generator($(this))
+  })
+
+
+</script>

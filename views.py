@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .forms import ContactForm, FreelanceForm, Search_Bar_Form
-from .models import Job_detail, labor_gov, collected_data
+from .models import labor_gov, collected_data
 from django.db.models import Count, Avg, Max, Min
 import math
 from django.contrib.auth.models import User
@@ -279,9 +279,6 @@ def jobs_gov_data_detail(request, model_name, id):
 
 # 用來在 search function 之中，找出想要display 出來的data list
 def get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by="", data_list_sort_by="", model_name=""):
-
-    # print('I am using get_data_list')
-    # print("my model_name is " + str(model_name))
     data_list = labor_gov_model
     if model_name=='job_gov_data':
         data_list = labor_gov_model
@@ -290,9 +287,7 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
     elif model_name=='both':
         data_list = collected_data_model
 
-
     if position:
-        # print('filter by {}'.format(position))
         data_list = data_list.filter(jobTitle__contains=position)
     if industry and industry!='all':
         data_list = data_list.filter(industry=industry)
@@ -303,10 +298,15 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
     if upper_limit and lower_limit:
         data_list = data_list.filter(salary__gte=lower_limit).filter(salary__lte=upper_limit)
 
+    # 如果data_list_order_by 是 None, 那麼就set "", 否則就set data_list_order_by
+    # input 可以是 []
     data_list_order_by = "" if data_list_order_by is None else data_list_order_by
 
+    # 如果data_list_order_by 是 None, 那麼就set "", 否則就set data_list_order_by
+    # input 是 "+/-"
     data_list_sort_by = "" if data_list_sort_by is None else data_list_sort_by
 
+    # 這裏將兩個
     result = data_list_order_by + data_list_sort_by
 
     if result =="":
@@ -378,41 +378,24 @@ def jobs_gov_data(request):
 
 
 def get_search(request, position="", industry="", location="", salary="", salary_type="", salary_filter="", data_list_order_by="", data_list_sort_by="", page_from_link=1):
-    print(request.build_absolute_uri())
     data_list = []
     if request.is_ajax():
-        print(request.GET.get('keyword'))
         print('I am using ajax')
         position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
-        # symbol = request.GET.get('symbol')
-        # print(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page)
 
         paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
-        # print(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by)
-
 
         data_list = get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by, model_name)
 
         """paginator"""
         data_show, show_page_list = get_Paginator(data_list, request, page)
 
-
-
-        # print (request.GET)
-        # print(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, symbol)
         html = render_to_string('data_table.html', {'list': data_show, 'show_page_list':show_page_list, 'paginator_link':paginator_link})
         # print(html)
         return JsonResponse({'html':html})
-        # return HttpResponse(json.dumps({'html':html}), content_type='application/json')
-        # return render(request, 'search_page.htm', {})
     else:
-        # print('-------------------')
-        # print('I am using get_search function and not ajax')
-        # print('-------------------')
         search_form = Search_Bar_Form(request.GET)
         position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
-        # symbol = request.GET.get('symbol')
-        # data_get_list = [position, industry, location, upper_limit, lower_limit, salary_type]
 
         paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
 

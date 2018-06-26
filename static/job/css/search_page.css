@@ -1,3 +1,50 @@
+h1 {
+  font-size: 55px;
+  line-height: 69px;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 10px;
+  text-align: left;
+  color: #534741;
+  z-index: 2; }
+
+h2 {
+  font-size: 30px;
+  color: #534741;
+  margin: 0;
+  z-index: 2; }
+
+p {
+  color: #534741;
+  font-size: 17px;
+  margin-top: 0;
+  line-height: 26px; }
+
+p.heading {
+  color: #534741;
+  font-size: 14px;
+  text-align: left; }
+
+.buttontext {
+  background-color: #534741;
+  color: #FCEE21;
+  font-family: "source-han-serif-tc"; }
+
+#input-with-keypress-1, #input-with-keypress-0 {
+  width: 50%; }
+
+#id_keyword, #id_location {
+  width: 267px; }
+
+#id_industry {
+  width: 186px; }
+
+#id_salary_type {
+  width: 186px; }
+
+#input-with-keypress-0, #input-with-keypress-1 {
+  text-align: center; }
+
 .job_row_model_filter span {
   padding: 5px;
   margin-right: 8px;

@@ -1,7 +1,7 @@
 #coding=utf-8 #coding:utf-8#-*-
 from django import forms
 from django.forms.widgets import HiddenInput
-from .models import Job_detail, User, Freelance, labor_gov, collected_data
+from .models import  User, Freelance, labor_gov, collected_data
 from django.utils.timezone import datetime
 
 from .important_list import DISTRICT_LIST, INDUSTRY_LIST, SALARY_TYPE_LIST, SEX_CHOICES, TYPES_CHOICES, OTP_CHOICES, OT_CHOICES, AGREEMENT_CHOICE

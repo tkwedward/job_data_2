@@ -33,44 +33,7 @@ class Freelance(models.Model):
     def __unicode__(self):
         return self.job_name
 
-class Job_detail(models.Model):
-    time_stamp = models.CharField(max_length=50, blank=True, null=True)
-    company = models.CharField(max_length=50)
-    jobTitle = models.CharField(max_length=50, default='')
-    location2 = models.CharField(max_length=50, blank=True)
-    job_type = models.CharField(max_length=50, default='')
-    gender = models.CharField(max_length=5, default='')
-    latest_year = models.FloatField(blank=True, null=True)
-
-    # 薪資
-    salary = models.FloatField(blank=True, null=True)
-
-    year = models.FloatField(blank=True, null=True)
-
-    week_total_hour = models.FloatField(blank=True, null=True)
-
-    OT_frequency = models.CharField(max_length=20, default='')
-
-    OT_payment = models.CharField(max_length=50, default='')
-
-    email = models.EmailField( default='')
-
-    date = models.DateField(default=datetime.today())
-
-    contract_week_hour = models.FloatField(blank=True, null=True)
-
-    salary_period = models.CharField(max_length=50, default='')
-
-    account_identify = models.CharField(max_length=50, null=True, blank=True)
-
-    def __str__(self):
-        return self.jobTitle
-    def __unicode__(self):
-        return self.jobTitle
-    def get_absolute_url(self):
-        return reverse('jobs_gov_data_detail', kwargs={'model_name': 'collected_data','id':self.id})
-
-
+# 在網上問卷收集來的數據
 class collected_data(models.Model):
     time_stamp = models.CharField(max_length=50, blank=True, null=True)
     # 1
@@ -124,6 +87,9 @@ class collected_data(models.Model):
 
     account_identify = models.CharField(max_length=50, null=True, blank=True)
 
+    working_day_number_float = models.FloatField(blank=True, null=True)
+    working_hours_number_float = models.FloatField(blank=True, null=True)
+
     def __str__(self):
         return self.jobTitle
     def __unicode__(self):
@@ -131,6 +97,7 @@ class collected_data(models.Model):
     def get_absolute_url(self):
         return reverse('jobs_gov_data_detail', kwargs={'model_name': 'collected_data','id':self.id})
 
+# 在勞工處收集的數據
 class labor_gov(models.Model):
     number = models.CharField(max_length=50)
     date = models.CharField(max_length=50)
@@ -160,7 +127,7 @@ class labor_gov(models.Model):
 
     end_time = models.TextField()
 
-    week_total_hour = models.TextField()
+    week_total_hour = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return self.jobTitle

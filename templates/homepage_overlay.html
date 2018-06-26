@@ -11,76 +11,9 @@
 
 
 
-<style>
-
-
-#loader{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 1;
-  width: 150px;
-  height: 150px;
-  margin: -75px 0 0 -75px;
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid RGB(252, 238, 33);
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-}
-
-#loader-text {
-	position: absolute;
-  left: 46%;
-  top: 65%;
-	font-size: 20px;
-	width: 120px;
-  height: 120px;
-}
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Add animation to "page content" */
-.animate-bottom {
-  position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
-}
-
-@-webkit-keyframes animatebottom {
-  from { bottom:-100px; opacity:0 }
-  to { bottom:0px; opacity:1 }
-}
-
-@keyframes animatebottom {
-  from{ bottom:-100px; opacity:0 }
-  to{ bottom:0; opacity:1 }
-}
-
-#myDiv {
-  display: none;
-  text-align: center;
-}
-</style>
-
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <script>
-
-
-
 $('#job-form').on('submit', function(event){
 	event.preventDefault();
 	on()
@@ -223,24 +156,30 @@ function graph_distance(title_1_top, title_2_top, graph_title_distance, offset=0
 			.style('top', title_2_top + graph_title_distance + 'px')
 }
 
+// 如果是在 search_page 看的話︰
 if (which_one=='group'){
 	json_file = {{json|safe}}
+  // 畫工時的Graph
 	draw_the_graph(json_file, svg_frame='svg.graph_1', svg_title='svg.title_1', x_title_text='小時', title_text='工時',  hour_or_salary='hour_classification', text_color='RGB(0,0,0)', graph_y_height='150')
 
+  // 畫工資的Graph
 	draw_the_graph(json_file, svg_frame='svg.graph_2', svg_title='svg.title_2', x_title_text='港幣(千)', title_text='每月工資',  hour_or_salary='salary_classification', text_color='RGB(0,0,0)', graph_y_height='150')
 
+  // 控制 graph 之間的距離
 	var title_1_top = 290
 	var title_2_top = 500
 	var graph_title_distance = 30
 
 	graph_distance(title_1_top, title_2_top, graph_title_distance, offset=-50)
 
+// 如果是在 交form 時看的話 看的話︰
 } else if (which_one=='individual') {
 	function on() {
+    // 從 user 輸入的form取資料
 		var raw_data = $('#job-form').serializeArray()
 		document.getElementById("overlay").style.display = "block";
-		console.log(raw_data);
 
+    // 將這些 raw_data 整成一個 form_data，方便後面調用
 		function get_data_from_form(raw_data){
 			form_data = {
 				"company": raw_data[1]['value'],
@@ -261,6 +200,7 @@ if (which_one=='group'){
 			}
       console.log(form_data);
 
+      // 這裏是控制 DOM 中的element，改變它顯示的文字
 			$('.overlay-company').text(form_data["company"])
 			$('.overlay-industry').text(form_data["industry"])
 			$('.overlay-jobTitle').text(form_data["jobTitle"])
@@ -274,7 +214,7 @@ if (which_one=='group'){
 
 		form_data=get_data_from_form(raw_data)
 
-
+    // 用ajax把東西 add 到 database之中
 	$.ajax({
 		url : "{% url 'added' %}", // the endpoint
 		type : "POST", // http method

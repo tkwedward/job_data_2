@@ -125,13 +125,12 @@
 
 	<div class="job_row_model_filter" style="position:absolute; left:86px; top:388px;" title="">
 		<!-- 這裏的datapage 是用來keep track 現在是第幾頁，這是用javascript 中的 page function時有用的 -->
-		<span class='selected' data-page=1 data-link="job_gov_data">只顯示勞工署 </span>
+		<span class='selected' data-page=1 data-link="job_gov_data">只顯示勞工處資料 </span>
 
 		<span class='' data-link="collected_data" data-page=1>只顯示用戶輸入的資料 </span>
 
 		<span class='' data-link="both" data-page=1>混合顯示 </span>
-	</div>
-
+	</div><!-- job_row_model_filter -->
 
 
 
@@ -162,13 +161,13 @@
 	<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_58.jpg' %}); position:absolute; left:1079px; top:428px; width:8px; height:532px;" title="">
 	</div>
 	<div class="job_row_header job_row_header_money" style="position:absolute; left:833px; top:428px; width:129px; height:26px;" title="">
-		薪金 <span class="tri glyphicon glyphicon-triangle-bottom" data-type='money' data-order='-'></span>
+		薪金 <span class="tri glyphicon glyphicon-triangle-bottom" data-type='salary' data-order='-'></span>
 	</div>
 	<div class="job_row_header job_row_header_working_day_number" style="position:absolute; left:969px; top:428px; width:110px; height:26px;" title="">
 		每週天數 <span class="tri glyphicon glyphicon-triangle-bottom" data-type='working_day_number_float' data-order='-'></span>
 	</div>
 	<div class="job_row_header job_row_header_week_total_hour" style="position:absolute; left:1087px; top:428px; width:110px; height:26px;" title="">
-		每週工時 <span class="tri glyphicon glyphicon-triangle-bottom" data-type='working_hours_number_float' data-order='-'></span>
+		每週工時 <span class="tri glyphicon glyphicon-triangle-bottom" data-type='week_total_hour' data-order='-'></span>
 	</div>
 
 
@@ -220,71 +219,13 @@
 </div>
 </body>
 
- <script>
-	// 只顯示勞工署, 只顯示用戶輸入的資料, 混合顯示三個選項的function
-	 
 
- // 用於三角形 sorting
-	var order = ""
-	var type = ""
-   $('.tri').click(function(){
-     var position = $('#id_keyword').val()
-     var industry = $('#id_industry').val()
-     var location = $('#id_location').val()
-     var upper_limit = $('#input-with-keypress-0').val()
-     var lower_limit = $('#input-with-keypress-1').val()
-     var salary_type = $('#id_salary_type').val()
-     order = $(this).attr('data-order')
-     type = $(this).attr('data-type')
-     // var symbol = $(this).text()
-
-
-     var previous_order= $(this).attr('data-order')
-     var previous_symbol= $(this).attr('class')
-     // console.log(previous_order, previous_symbol);
-
-     if (previous_order=='-'){
-       previous_order = ''
-     } else if (previous_order=="") {
-       previous_order = '-'
-     }
-
-     if (previous_symbol=='tri glyphicon glyphicon-triangle-bottom'){
-       previous_symbol = 'tri glyphicon glyphicon-triangle-top'
-     } else if (previous_symbol=="tri glyphicon glyphicon-triangle-top") {
-       previous_symbol = 'tri glyphicon glyphicon-triangle-bottom'
-     }
-
-     $(this).attr('data-order', previous_order);
-     // $(this).toggleClass('tri glyphicon glyphicon-triangle-bottom', 'tri glyphicon glyphicon-triangle-top');
-     $(this).attr('class', previous_symbol);
-
-     data = {
-       'keyword':position,
-       'industry':industry,
-       'location':location,
-       'upper_limit':upper_limit,
-       'lower_limit':lower_limit,
-       'salary_type':salary_type,
-       'order':order,
-       'type':type,
-       // 'symbol':symbol
-     }
-
-     $.ajax({
-       type: "GET",
-       url: "{% url 'search' %}",
-       data: data,
-       success: function(result) {
-
-           // 改變data table中的 data_list 和 pagination
-           k =result['html']
-           // console.log(k);
-           $(".data_table_bundle").html(k)
-         }
-   }); // end of ajax
-   })
- </script>
- <link rel="stylesheet" type="text/css" href="{% static 'job/css/check_salary.css' %}" />
  <link rel="stylesheet" type="text/css" href="{% static 'job/css/search_page.css' %}" />
-</html>
+
+ 	<!-- 只顯示勞工署, 只顯示用戶輸入的資料, 混合顯示三個選項的function -->
+	{% include 'search_page_triangle.html' %}
+
+	<!-- 這個js 是用來控制三個按掣︰只顯示勞工處資料 只顯示用戶輸入的資料 混合顯示 -->
+	{% include 'search_page_user_input_filter.html' %}
+
+ </html>
