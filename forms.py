@@ -158,14 +158,6 @@ class ContactForm(forms.ModelForm):
         super(ContactForm, self).__init__(*args, **kwargs)
         self.fields['company'].error_messages = {'required': 'custom required message'}
 
-class LoginForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-
-
-    class Meta:
-        model = User
-        fields = 'user_name', 'password'
-
 
 class RegForm(forms.ModelForm):
 

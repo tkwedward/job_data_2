@@ -8,8 +8,7 @@ from django.urls import reverse
 from .important_list import DISTRICT_LIST, INDUSTRY_LIST, SALARY_TYPE_LIST, SEX_CHOICES, TYPES_CHOICES, OTP_CHOICES, OT_CHOICES
 
 class User(models.Model):
-    user_name = models.CharField( max_length=100)
-    password = models.CharField(max_length=32)
+    uid = models.CharField(max_length=100)
 
 
 
@@ -64,9 +63,10 @@ class collected_data(models.Model):
 
     # 10. 薪金
     salary = models.FloatField(blank=True, null=True)
+    salary_text = models.CharField(blank=True, null=True, max_length=100)
 
     # 11. 年資
-    year_of_working = models.FloatField(blank=True, null=True)
+    year_of_working = models.CharField(blank=True, null=True, max_length=100)
 
     # 12. 合約每週工時
     contract_week_hour = models.FloatField(blank=True, null=True)
@@ -81,11 +81,11 @@ class collected_data(models.Model):
     OT_payment = models.CharField(max_length=50, choices=OTP_CHOICES)
 
     # 交form的日子
-    date = models.DateField()
+    date = models.CharField(blank=True, null=True, max_length=100)
 
     email = models.EmailField(blank=True, null=True)
 
-    account_identify = models.CharField(max_length=50, null=True, blank=True)
+    uid = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
 
     working_day_number_float = models.FloatField(blank=True, null=True)
     working_hours_number_float = models.FloatField(blank=True, null=True)

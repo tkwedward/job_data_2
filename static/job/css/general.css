@@ -5,6 +5,8 @@ a {
   color: RGB(255, 255, 255);
   text-decoration: none;
   margin-right: 10px; }
+.navbar div {
+  color: RGB(255, 255, 255); }
 
 input {
   background-color: RGB(252, 238, 33);

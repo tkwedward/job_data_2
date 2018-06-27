@@ -1,34 +1,33 @@
 #coding:utf-8#-*-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from .forms import ContactForm, FreelanceForm, Search_Bar_Form
-from .models import labor_gov, collected_data
-from django.db.models import Count, Avg, Max, Min
-import math
-from django.contrib.auth.models import User
-from django.templatetags.static import static
-from django.template.loader import render_to_string
-import json
-from itertools import chain
-import re, datetime
-import numpy as np
-from django.db.models import Q
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from collections import OrderedDict
-# 製造頁面
+import datetime, math, json, re, sys
 from itertools import chain
-from .important_list import TYPES_CHOICES
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Count, Avg, Max, Min, Q
+from django.http import HttpResponse, JsonResponse
+from django.template import RequestContext
+from django.template.loader import render_to_string
+from django.templatetags.static import static
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
+
+import numpy as np
+from .forms import ContactForm, FreelanceForm, Search_Bar_Form
+from .models import labor_gov, collected_data, User
+from .important_list import TYPES_CHOICES
+
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
+
+# 收集回來資料的 model 和 排除了 working_hours_number = 0 case
 collected_data_model = collected_data.objects.all()
 labor_gov_model = labor_gov.objects.exclude(working_hours_number=None).exclude(working_hours_number='').exclude(week_total_hour=0.0)
-# labor_gov_model = labor_gov.objects.all()
-    # 第一頁
+
+# 首頁的view
 def homepage(request):
     form = ContactForm(
         initial={
@@ -64,14 +63,9 @@ def homepage(request):
 
         # week_total_hour = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '一周實際工時'}))
 
-        }
-        )
-    form2 = Search_Bar_Form()
-    # user = request.user
-    # user_id = user.social_auth.get(provider='facebook').uid
-    user = ""
-    user_id=""
-    return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'form2':form2, 'type':'normal'})
+        })
+
+    return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal'})
 
 def about_us(request):
     return render(request, 'about_us.htm', {})
@@ -119,11 +113,13 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
         range_min = int(math.floor(float(mini_list['minimum'])))
     except Exception as e:
         print(e, 'error in line 116')
+        print(mini_list)
         range_min=0
     try:
         range_max = int(math.ceil(float(max_list['maximum'])))
     except Exception as e:
         print(e, 'error in line 121')
+        print(mini_list)
         range_max=50
     global combine_length
     global combine_number
@@ -165,30 +161,49 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
 
 
 @require_POST
+@login_required
 def added(request):
     form = request.POST.dict()
     category_model = labor_gov_model.filter(industry=form['industry'])
 
     if form['agreement']==u'true':
-        b = collected_data(
-            company=form['company'], # 公司名稱
-            industry=form['industry'], # 行業
-            jobTitle=form['jobTitle'], #
-            location2=form['location2'],
-            salary_type=form['salary_type'],# 工作形態
-            job_type=form['salary_type'],# 工作形態
-            gender=form['gender'],#性別
-            latest_year=form['latest_year'],
-            salary=form['salary'],
-            contract_week_hour=form['contract_week_hour'],
-            year_of_working=form['year'],
-            week_total_hour=form['week_total_hour'],
-            OT_frequency=form['OT_frequency'],
-            OT_payment=form['OT_payment'],
-            working_day_number=form['working_day_number'],
-            date=datetime.datetime.now().date()
-        )
-        b.save()
+        uid =  request.user.social_auth.get(provider='facebook').uid
+
+        try:
+            user = User.objects.get(uid=uid)
+        except:
+            User.objects.create(uid=uid)
+            user = User.objects.get(uid=uid)
+
+        user_post_number = len(collected_data.objects.filter(uid=user))
+        print(user_post_number)
+
+        if user_post_number < 5:
+            # 因為經過 pandas 後，id 會變成 null，所以要手動加入 id，這裏的next_id是抽 database 中最後的id
+            next_id = collected_data_model.aggregate(maximum=Max('id'))['maximum']
+            b = collected_data(
+                company=form['company'], # 公司名稱
+                industry=form['industry'], # 行業
+                jobTitle=form['jobTitle'], #
+                location2=form['location2'],
+                salary_type=form['salary_type'],# 工作形態
+                job_type=form['salary_type'],# 工作形態
+                gender=form['gender'],#性別
+                latest_year=form['latest_year'],
+                salary=form['salary'],
+                contract_week_hour=form['contract_week_hour'],
+                year_of_working=form['year'],
+                week_total_hour=form['week_total_hour'],
+                OT_frequency=form['OT_frequency'],
+                OT_payment=form['OT_payment'],
+                working_day_number=form['working_day_number'],
+                id=next_id+1,
+                uid=user,
+                date=datetime.datetime.now().date()
+            )
+            b.save()
+        else:
+            messages.error(request, "你提交資料的次數超過5次")
     """
     傳送的data︰
     時間︰min, max, average
@@ -230,7 +245,7 @@ def success(request):
 
 def jobs_gov_data_detail(request, model_name, id):
     if model_name == 'collected_data':
-        instance = get_object_or_404(collected_data, id=id)
+        instance = get_object_or_404(collected_data, id=int(id))
     else:
         instance = get_object_or_404(labor_gov, id=id)
     salary_classification = []
@@ -278,6 +293,8 @@ def jobs_gov_data_detail(request, model_name, id):
     'category': form['industry'], 'json':json_file})
 
 # 用來在 search function 之中，找出想要display 出來的data list
+
+
 def get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by="", data_list_sort_by="", model_name=""):
     data_list = labor_gov_model
     if model_name=='job_gov_data':
@@ -285,7 +302,7 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
     elif model_name=='collected_data':
         data_list = collected_data_model
     elif model_name=='both':
-        data_list = collected_data_model
+        data_list = collected_data_model | labor_gov_model
 
     if position:
         data_list = data_list.filter(jobTitle__contains=position)
@@ -313,6 +330,7 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
         pass
     else:
         data_list=data_list.order_by(result)
+
     return data_list
 
 def get_data_from_the_url(request):

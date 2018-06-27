@@ -1,4 +1,16 @@
 
+
+{% if messages %}
+<div class='error_list' style=" position:absolute;left:90px; top:94px; width:268px; height:26px; color:yellow;" title="">
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+
 <!-- start 中間東西 -->
 <svg class='title_1 graph-detail' style="position:absolute; height:20px;"></svg>
 
