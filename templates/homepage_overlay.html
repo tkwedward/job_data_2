@@ -210,7 +210,7 @@ if (which_one=='group'){
 				"OT_frequency":raw_data[14]['value'],
 				"OT_payment":raw_data[15]['value'],
 			}
-      console.log(form_data);
+      // console.log(form_data);
 
       // 這裏是控制 DOM 中的element，改變它顯示的文字
 			$('.overlay-company').text(form_data["company"])
@@ -256,12 +256,20 @@ if (which_one=='group'){
 		// handle a successful response
 		success : function(json) {
 			// var data = json['json_classification']
+      $(".error").html('')
+			var error = json['error']
+      if (error){
+        $("#overlay").css('display', 'None')
+        $(".error").html(' (請登入Facebook後再提交表格)')
+
+      }
+
 			var graph_height = 180
 			var title_1_top = 240
 			var title_2_top = 540
 			var graph_title_distance = 45
-			console.log('the json is:');
-			console.log(json);
+			// console.log('the json is:');
+			// console.log(json);
 			draw_the_graph(json, svg_frame='svg.graph_1', svg_title='svg.title_1', x_title_text='小時', title_text='工時',  hour_or_salary='hour_classification', text_color="RGB(252, 238, 33)", graph_y_height=graph_height)
 
 			draw_the_graph(json, svg_frame='svg.graph_2', svg_title='svg.title_2', x_title_text='港幣(千元)', title_text='每月工資',  hour_or_salary='salary_classification', text_color="RGB(252, 238, 33)", graph_y_height=graph_height)

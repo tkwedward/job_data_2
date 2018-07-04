@@ -81,9 +81,12 @@
 			{{ form.date }
 		</div> -->
 
-		<div style="position:absolute; left:373px; top:698px; width:210px; height:26px; font-size:13px;" title="">
+		<div style="position:absolute; left:373px; top:698px; width:420px; height:26px; font-size:13px;" title="">
 		<input class="agreement-checkbox" type="checkbox" name="agreement" value="Yes" id="agreement">
-			<span style="position:relative; bottom:5px;">我同意將資料加入開工網資料庫</span>
+			<span style="position:relative; bottom:5px;">我同意將資料加入開工網資料庫
+					<span class="error" style="color: red"></span>
+			</span>
+
 
 		</div>
 
@@ -102,6 +105,13 @@
 	</form>
 
 	<div style="position:absolute; left:515px; top:745px; width:358px; height:70.124px; font-size:12px; color: RGB(252, 238, 33)" >
+
+
+
+
+
+
+
 
 	<div id="overlay">
 		<div class="close-button" onclick="off()" style="position:absolute; left:1100px; top:20px; width:22px; height:22px; font-size:22px">
@@ -185,7 +195,8 @@
 		</div><!-- overlay_button -->
 	</div><!-- myDiv -->
 
-	</div>
+	</div><!-- overlay -->
+
 
 
 	<script src="https://d3js.org/d3.v4.min.js"></script>

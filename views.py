@@ -9,10 +9,12 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Avg, Max, Min, Q
 from django.http import HttpResponse, JsonResponse
-from django.template import RequestContext
+from django.template import RequestContext,Template
 from django.template.loader import render_to_string
 from django.templatetags.static import static
+from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
+
 from django.views.decorators.http import require_POST
 
 import numpy as np
@@ -41,37 +43,38 @@ def homepage(request):
     return:
         form: 填好了的form 和 type: 'normal'是用來與 freelance的情況做區分
     """
+
     form = ContactForm(
         initial={
-        'company': '搵你笨保險有限公司',
-        'industry':'政府部門',
-        # 職位名稱
-        'jobTitle':'保險推銷員',
-        # 工作地點
-        'place':'東區',
-        # 職務型態
-        'job_type':'全職',
-        #工作天數
-        'date_number':'10',
-        # 性別
-        'gender':'f',
-        # 你最近從事這份工作的年份
-        'latest_year':2015,
-        # 支薪周期
-        'salary_period':'月薪',
-        'salary':'10000',
-        # 行業年資
-        'year':9,
-        # 合約列明一周工時
-        'contract_hour':40,
-        # 每周工時
-        'week_total_hour':40,
-
-        # 超時
-        'OT_payment':u'有',
-
-        # 加班補償
-        'OT_frequency': u'絕少',
+        # 'company': '搵你笨保險有限公司',
+        # 'industry':'政府部門',
+        # # 職位名稱
+        # 'jobTitle':'保險推銷員',
+        # # 工作地點
+        # 'place':'東區',
+        # # 職務型態
+        # 'job_type':'全職',
+        # #工作天數
+        # 'date_number':'10',
+        # # 性別
+        # 'gender':'f',
+        # # 你最近從事這份工作的年份
+        # 'latest_year':2015,
+        # # 支薪周期
+        # 'salary_period':'月薪',
+        # 'salary':'10000',
+        # # 行業年資
+        # 'year':9,
+        # # 合約列明一周工時
+        # 'contract_hour':40,
+        # # 每周工時
+        # 'week_total_hour':40,
+        #
+        # # 超時
+        # 'OT_payment':u'有',
+        #
+        # # 加班補償
+        # 'OT_frequency': u'絕少',
 
         # week_total_hour = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '一周實際工時'}))
 
@@ -215,7 +218,6 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
 
 
 @require_POST
-@login_required
 def added(request):
     """
     data:
@@ -254,54 +256,68 @@ def added(request):
         - salary_classification
         - category︰行業
     """
+
     form = request.POST.dict()
     category_model = labor_gov_model.filter(industry=form['industry'])
 
     # 10 如果答應放入資料，就取出該用戶的uid
+
     if form['agreement']==u'true':
-        # 取得用戶的 facebook uid
-        uid =  request.user.social_auth.get(provider='facebook').uid
 
-        # 取得用戶的 object，如果沒有就 create一個新的
-        try:
-            user = User.objects.get(uid=uid)
-        except:
-            User.objects.create(uid=uid)
-            user = User.objects.get(uid=uid)
+        if not request.user.is_authenticated():
+            # redirect_url = "oauth/login/facebook/"
+            return JsonResponse({
+                'error': 'error',
+                'form': None,
+                'hour_classification':None,
+                'salary_classification':None,
+                'category': None
+                })
 
-        user_post_number = len(collected_data.objects.filter(uid=user))
-        print(user_post_number)
+        # 取得用戶的 facebook uid, 如果找不到，代表沒有login，所以轉向 login page
+        if request.user.is_authenticated():
+            uid =  request.user.social_auth.get(provider='facebook').uid
 
-        # 20 如果 user_post_number 少於5, 就手動加入id
-        if user_post_number < 5:
-            # 因為經過 pandas 後，id 會變成 null，所以要手動加入 id，這裏的next_id是抽 database 中最後的id
-            next_id = collected_data_model.aggregate(maximum=Max('id'))['maximum']+1
+            # 取得用戶的 object，如果沒有就 create一個新的
+            try:
+                user = User.objects.get(uid=uid)
+            except:
+                User.objects.create(uid=uid)
+                user = User.objects.get(uid=uid)
 
-            # 30 create 一個新的 post instance
-            b = collected_data(
-                company=form['company'], # 公司名稱
-                industry=form['industry'], # 行業
-                jobTitle=form['jobTitle'], #
-                location2=form['location2'],
-                salary_type=form['salary_type'],# 工作形態
-                job_type=form['salary_type'],# 工作形態
-                gender=form['gender'],#性別
-                latest_year=form['latest_year'],
-                salary=form['salary'],
-                contract_week_hour=form['contract_week_hour'],
-                year_of_working=form['year'],
-                week_total_hour=form['week_total_hour'],
-                OT_frequency=form['OT_frequency'],
-                OT_payment=form['OT_payment'],
-                working_day_number=form['working_day_number'],
-                id=next_id,
-                uid=user,
-                date=datetime.datetime.now().date()
-            )
-            b.save()
-        else:
-            # 40 如果多於5 次，就出 error message
-            messages.error(request, "你提交資料的次數超過5次")
+            user_post_number = len(collected_data.objects.filter(uid=user))
+            print(user_post_number)
+
+            # 20 如果 user_post_number 少於5, 就手動加入id
+            if user_post_number < 5:
+                # 因為經過 pandas 後，id 會變成 null，所以要手動加入 id，這裏的next_id是抽 database 中最後的id
+                next_id = collected_data_model.aggregate(maximum=Max('id'))['maximum']+1
+
+                # 30 create 一個新的 post instance
+                b = collected_data(
+                    company=form['company'], # 公司名稱
+                    industry=form['industry'], # 行業
+                    jobTitle=form['jobTitle'], #
+                    location2=form['location2'],
+                    salary_type=form['salary_type'],# 工作形態
+                    job_type=form['salary_type'],# 工作形態
+                    gender=form['gender'],#性別
+                    latest_year=form['latest_year'],
+                    salary=form['salary'],
+                    contract_week_hour=form['contract_week_hour'],
+                    year_of_working=form['year'],
+                    week_total_hour=form['week_total_hour'],
+                    OT_frequency=form['OT_frequency'],
+                    OT_payment=form['OT_payment'],
+                    working_day_number=form['working_day_number'],
+                    id=next_id,
+                    uid=user,
+                    date=datetime.datetime.now().date()
+                )
+                b.save()
+            else:
+                # 40 如果多於5 次，就出 error message
+                messages.error(request, "你提交資料的次數超過5次")
 
     """
     傳送的data︰
@@ -468,7 +484,7 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
     # 這裏將兩個
     result = data_list_order_by + data_list_sort_by
 
-    if result =="":
+    if result ==u"":
         pass
     else:
         data_list=data_list.order_by(result)
