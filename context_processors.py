@@ -1,4 +1,11 @@
 def userdata(request):
+    """
+    arg:
+        request
+
+    return:
+        username 和 user_id
+    """
     user = request.user
     userdata ={
         'username': None,
