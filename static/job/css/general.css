@@ -4,9 +4,11 @@ a {
 .navbar a {
   color: RGB(255, 255, 255);
   text-decoration: none;
-  margin-right: 10px; }
+  padding: 12px; }
 .navbar div {
-  color: RGB(255, 255, 255); }
+  color: RGB(255, 255, 255);
+  top: 12px;
+  left: 121px; }
 
 input {
   background-color: RGB(252, 238, 33);

@@ -22,8 +22,11 @@ from .forms import ContactForm, FreelanceForm, Search_Bar_Form
 from .models import labor_gov, collected_data, User
 from .important_list import TYPES_CHOICES
 
-# reload(sys)
-# sys.setdefaultencoding('utf-8')
+try:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+except:
+    pass
 
 # 收集回來資料的 model 和 排除了 working_hours_number = 0 case
 """
@@ -46,47 +49,46 @@ def homepage(request):
 
     form = ContactForm(
         initial={
-        # 'company': '搵你笨保險有限公司',
-        # 'industry':'政府部門',
-        # # 職位名稱
-        # 'jobTitle':'保險推銷員',
-        # # 工作地點
-        # 'place':'東區',
-        # # 職務型態
-        # 'job_type':'全職',
-        # #工作天數
-        # 'date_number':'10',
-        # # 性別
-        # 'gender':'f',
-        # # 你最近從事這份工作的年份
-        # 'latest_year':2015,
-        # # 支薪周期
-        # 'salary_period':'月薪',
-        # 'salary':'10000',
-        # # 行業年資
-        # 'year':9,
-        # # 合約列明一周工時
-        # 'contract_hour':40,
-        # # 每周工時
-        # 'week_total_hour':40,
-        #
-        # # 超時
-        # 'OT_payment':u'有',
-        #
-        # # 加班補償
-        # 'OT_frequency': u'絕少',
+        'company': '搵你笨保險有限公司',
+        'industry':'政府部門',
+        # 職位名稱
+        'jobTitle':'保險推銷員',
+        # 工作地點
+        'place':'東區',
+        # 職務型態
+        'job_type':'全職',
+        #工作天數
+        'date_number':'10',
+        # 性別
+        'gender':'f',
+        # 你最近從事這份工作的年份
+        'latest_year':2015,
+        # 支薪周期
+        'salary_period':'月薪',
+        'salary':'10000',
+        # 行業年資
+        'year':9,
+        # 合約列明一周工時
+        'contract_hour':40,
+        # 每周工時
+        'week_total_hour':40,
 
-        # week_total_hour = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '一周實際工時'}))
+        # 超時
+        'OT_payment':u'有',
+
+        # 加班補償
+        'OT_frequency': u'絕少',
 
         })
 
-    return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal'})
+    # homepage: 用來highlight homepage 的 navbar
+    return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal', "homepage":True})
 
 def about_us(request):
     """
     關於我們的頁面
     """
-    return render(request, 'about_us.htm', {})
+    return render(request, 'about_us.htm', {"about":True})
 
 
 
@@ -261,63 +263,60 @@ def added(request):
     category_model = labor_gov_model.filter(industry=form['industry'])
 
     # 10 如果答應放入資料，就取出該用戶的uid
+    if not request.user.is_authenticated():
+        # redirect_url = "oauth/login/facebook/"
+        return JsonResponse({
+            'error': 'error',
+            'form': None,
+            'hour_classification':None,
+            'salary_classification':None,
+            'category': None
+            })
 
-    if form['agreement']==u'true':
+    # 取得用戶的 facebook uid, 如果找不到，代表沒有login，所以轉向 login page
+    if request.user.is_authenticated():
+        uid =  request.user.social_auth.get(provider='facebook').uid
 
-        if not request.user.is_authenticated():
-            # redirect_url = "oauth/login/facebook/"
-            return JsonResponse({
-                'error': 'error',
-                'form': None,
-                'hour_classification':None,
-                'salary_classification':None,
-                'category': None
-                })
+        # 取得用戶的 object，如果沒有就 create一個新的
+        try:
+            user = User.objects.get(uid=uid)
+        except:
+            User.objects.create(uid=uid)
+            user = User.objects.get(uid=uid)
 
-        # 取得用戶的 facebook uid, 如果找不到，代表沒有login，所以轉向 login page
-        if request.user.is_authenticated():
-            uid =  request.user.social_auth.get(provider='facebook').uid
+        user_post_number = len(collected_data.objects.filter(uid=user))
+        print(user_post_number)
 
-            # 取得用戶的 object，如果沒有就 create一個新的
-            try:
-                user = User.objects.get(uid=uid)
-            except:
-                User.objects.create(uid=uid)
-                user = User.objects.get(uid=uid)
+        # 20 如果 user_post_number 少於5, 就手動加入id
+        if user_post_number < 5:
+            # 因為經過 pandas 後，id 會變成 null，所以要手動加入 id，這裏的next_id是抽 database 中最後的id
+            next_id = collected_data_model.aggregate(maximum=Max('id'))['maximum']+1
 
-            user_post_number = len(collected_data.objects.filter(uid=user))
-            print(user_post_number)
-
-            # 20 如果 user_post_number 少於5, 就手動加入id
-            if user_post_number < 5:
-                # 因為經過 pandas 後，id 會變成 null，所以要手動加入 id，這裏的next_id是抽 database 中最後的id
-                next_id = collected_data_model.aggregate(maximum=Max('id'))['maximum']+1
-
-                # 30 create 一個新的 post instance
-                b = collected_data(
-                    company=form['company'], # 公司名稱
-                    industry=form['industry'], # 行業
-                    jobTitle=form['jobTitle'], #
-                    location2=form['location2'],
-                    salary_type=form['salary_type'],# 工作形態
-                    job_type=form['salary_type'],# 工作形態
-                    gender=form['gender'],#性別
-                    latest_year=form['latest_year'],
-                    salary=form['salary'],
-                    contract_week_hour=form['contract_week_hour'],
-                    year_of_working=form['year'],
-                    week_total_hour=form['week_total_hour'],
-                    OT_frequency=form['OT_frequency'],
-                    OT_payment=form['OT_payment'],
-                    working_day_number=form['working_day_number'],
-                    id=next_id,
-                    uid=user,
-                    date=datetime.datetime.now().date()
-                )
-                b.save()
-            else:
-                # 40 如果多於5 次，就出 error message
-                messages.error(request, "你提交資料的次數超過5次")
+            # 30 create 一個新的 post instance
+            b = collected_data(
+                company=form['company'], # 公司名稱
+                industry=form['industry'], # 行業
+                jobTitle=form['jobTitle'], #
+                location2=form['location2'],
+                salary_type=form['salary_type'],# 工作形態
+                job_type=form['salary_type'],# 工作形態
+                gender=form['gender'],#性別
+                latest_year=form['latest_year'],
+                salary=form['salary'],
+                contract_week_hour=form['contract_week_hour'],
+                year_of_working=form['year'],
+                week_total_hour=form['week_total_hour'],
+                OT_frequency=form['OT_frequency'],
+                OT_payment=form['OT_payment'],
+                working_day_number=form['working_day_number'],
+                id=next_id,
+                uid=user,
+                date=datetime.datetime.now().date()
+            )
+            b.save()
+        else:
+            # 40 如果多於5 次，就出 error message
+            messages.error(request, "你提交資料的次數超過5次")
 
     """
     傳送的data︰
@@ -445,7 +444,7 @@ def jobs_gov_data_detail(request, model_name, id):
     return render(request, 'analysis.html', {'form': form,
     'hour_classification':hour_classification,
     'salary_classification':salary_classification,
-    'category': form['industry'], 'json':json_file})
+    'category': form['industry'], 'json':json_file, 'search':True})
 
 # 用來在 search function 之中，找出想要display 出來的data list
 
@@ -593,7 +592,7 @@ def jobs_gov_data(request):
 
 
     return render(request, 'search_page.htm', {'list': data_show, 'form': search_form, 'paginator_link':paginator_link, #'category_list':CATEGORY_CHOICES,
-    'show_page_list':show_page_list})
+    'show_page_list':show_page_list, 'search':True})
 
 
 
@@ -624,7 +623,7 @@ def get_search(request, position="", industry="", location="", salary="", salary
         """paginator"""
         data_show, show_page_list = get_Paginator(data_list, request, page_from_link)
         # print(data_show, show_page_list, data_list)
-        return render(request, 'search_page.htm', {'list': data_show, 'form':search_form, 'paginator_link':paginator_link, 'show_page_list':show_page_list})
+        return render(request, 'search_page.htm', {'list': data_show, 'form':search_form, 'paginator_link':paginator_link, 'show_page_list':show_page_list, 'search':True})
 
 def add_json_data(request):
     """
