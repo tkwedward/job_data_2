@@ -15,7 +15,12 @@ a{
       left:121px;
   }
 
-}
+  .selected{
+      background: RGB(252, 238, 33);
+      color: RGB(83,71,65);
+    }
+  }//navbar
+
 
 input{
   // -webkit-appearance: textfield;

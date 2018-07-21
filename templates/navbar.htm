@@ -13,9 +13,9 @@
   </div>
 
   <div style=" position:absolute; width:400px; height:35px;" title="">
-    <a style="{% if homepage %}background:#4bb8af;{% endif %}" href="{% url 'form' %}">工資時薪透明化運動</a>
-    <a style="{% if search %}background:#4bb8af;{% endif %}" href="{% url 'jobs_gov_data' %}">查看時薪</a>
-    <a style="{% if about %}background:#4bb8af;{% endif %}" href="{% url 'about_us' %}">關於我們</a>
+    <a {% if homepage %} class ="selected"{% endif %} href="{% url 'form' %}">工資時薪透明化運動</a>
+    <a {% if search %}class ="selected"{% endif %} href="{% url 'jobs_gov_data' %}">查看時薪</a>
+    <a {% if about %}class ="selected"{% endif %} href="{% url 'about_us' %}">關於我們</a>
   </div>
   <div style="position:absolute; left:1100px; top:12px; width:150px; height:29px; font-size:15px">
     {% if user.is_authenticated %}

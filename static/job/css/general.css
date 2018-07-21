@@ -9,6 +9,9 @@ a {
   color: RGB(255, 255, 255);
   top: 12px;
   left: 121px; }
+.navbar .selected {
+  background: RGB(252, 238, 33);
+  color: RGB(83, 71, 65); }
 
 input {
   background-color: RGB(252, 238, 33);
