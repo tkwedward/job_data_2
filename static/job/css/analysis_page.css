@@ -6,4 +6,10 @@
   color: RGB(252, 238, 33);
   text-decoration: None; }
 
+.overlay-button-label {
+  padding: 4px 0px; }
+
+.overlay-button {
+  padding: 4px; }
+
 /*# sourceMappingURL=analysis_page.css.map */

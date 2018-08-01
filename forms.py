@@ -105,7 +105,7 @@ class ContactForm(forms.ModelForm):
     job_type = forms.ChoiceField(widget=forms.Select(), choices=TYPES_CHOICES, label='', initial='')
 
      # 工作天數
-    date_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder': u'工作天數'}))
+    date_number = forms.CharField(widget=forms.TextInput(attrs={'placeholder': u'每周工作天數'}))
 
 
     # 性別

@@ -1,13 +1,16 @@
 
 
-{% if messages %}
-<div class='error_list' style=" position:absolute;left:90px; top:94px; width:268px; height:26px; color:yellow;" title="">
-  <ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-</div>
+{% if not page %}
+  {% if messages  %}
+
+    <div class='error_list' style=" position:absolute;left:90px; top:94px; width:268px; height:26px; color:yellow;" title="">
+      <ul class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 {% endif %}
 
 
@@ -149,7 +152,7 @@ function draw_the_graph(json, svg_frame, svg_title, x_title_text, title_text,  h
 
 }; // end draw_the_graph
 
-// 用來整個loading loop
+// 用來整個loading loop bar
 function showPage() {
   document.getElementById("loader").style.display = "none";
   document.getElementById("loader-text").style.display = "none";
@@ -189,7 +192,7 @@ if (which_one=='group'){
 	function on() {
     // 從 user 輸入的form取資料
 		var raw_data = $('#job-form').serializeArray()
-		document.getElementById("overlay").style.display = "block";
+
 
     // 將這些 raw_data 整成一個 form_data，方便後面調用
 		function get_data_from_form(raw_data){
@@ -257,26 +260,29 @@ if (which_one=='group'){
 		success : function(json) {
 			// var data = json['json_classification']
       $(".error").html('')
-			var error = json['error']
-      if (error){
-        $("#overlay").css('display', 'None')
+
+      if (json['error']){
+        // $("#overlay").css('display', 'None')
         $(".error").html(' (請登入Facebook後再提交表格)')
-
+        console.log('請登入Facebook後再提交表格')
       }
+      else
+      {
+        document.getElementById("overlay").style.display = "block";
+        var graph_height = 180
+  			var title_1_top = 240
+  			var title_2_top = 540
+  			var graph_title_distance = 45
+  			// console.log('the json is:');
+  			// console.log(json);
+  			draw_the_graph(json, svg_frame='svg.graph_1', svg_title='svg.title_1', x_title_text='小時', title_text='工時',  hour_or_salary='hour_classification', text_color="RGB(252, 238, 33)", graph_y_height=graph_height)
 
-			var graph_height = 180
-			var title_1_top = 240
-			var title_2_top = 540
-			var graph_title_distance = 45
-			// console.log('the json is:');
-			// console.log(json);
-			draw_the_graph(json, svg_frame='svg.graph_1', svg_title='svg.title_1', x_title_text='小時', title_text='工時',  hour_or_salary='hour_classification', text_color="RGB(252, 238, 33)", graph_y_height=graph_height)
+  			draw_the_graph(json, svg_frame='svg.graph_2', svg_title='svg.title_2', x_title_text='港幣(千元)', title_text='每月工資',  hour_or_salary='salary_classification', text_color="RGB(252, 238, 33)", graph_y_height=graph_height)
 
-			draw_the_graph(json, svg_frame='svg.graph_2', svg_title='svg.title_2', x_title_text='港幣(千元)', title_text='每月工資',  hour_or_salary='salary_classification', text_color="RGB(252, 238, 33)", graph_y_height=graph_height)
+  			graph_distance(title_1_top, title_2_top, graph_title_distance)
+      } // 如果登入了 facebook
 
 
-
-			graph_distance(title_1_top, title_2_top, graph_title_distance)
 
 		},
 		error : function(xhr,errmsg,err) {

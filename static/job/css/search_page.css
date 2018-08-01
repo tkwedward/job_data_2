@@ -57,4 +57,18 @@ p.heading {
   background-color: RGB(83, 71, 65);
   color: RGB(252, 238, 33); }
 
+.job_row_box {
+  background: RGB(83, 71, 65);
+  font-size: 12px;
+  color: RGB(252, 238, 33); }
+  .job_row_box a {
+    text-decoration: none;
+    color: RGB(252, 238, 33); }
+
+.job_row_header, .job_row_box {
+  padding: 4px; }
+
+.next, .last {
+  cursor: pointer; }
+
 /*# sourceMappingURL=search_page.css.map */

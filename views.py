@@ -48,38 +48,38 @@ def homepage(request):
     """
 
     form = ContactForm(
-        initial={
-        'company': '搵你笨保險有限公司',
-        'industry':'政府部門',
-        # 職位名稱
-        'jobTitle':'保險推銷員',
-        # 工作地點
-        'place':'東區',
-        # 職務型態
-        'job_type':'全職',
-        #工作天數
-        'date_number':'10',
-        # 性別
-        'gender':'f',
-        # 你最近從事這份工作的年份
-        'latest_year':2015,
-        # 支薪周期
-        'salary_period':'月薪',
-        'salary':'10000',
-        # 行業年資
-        'year':9,
-        # 合約列明一周工時
-        'contract_hour':40,
-        # 每周工時
-        'week_total_hour':40,
-
-        # 超時
-        'OT_payment':u'有',
-
-        # 加班補償
-        'OT_frequency': u'絕少',
-
-        })
+        # initial={
+        # 'company': '搵你笨保險有限公司',
+        # 'industry':'政府部門',
+        # # 職位名稱
+        # 'jobTitle':'保險推銷員',
+        # # 工作地點
+        # 'place':'東區',
+        # # 職務型態
+        # 'job_type':'全職',
+        # #工作天數
+        # 'date_number':'10',
+        # # 性別
+        # 'gender':'f',
+        # # 你最近從事這份工作的年份
+        # 'latest_year':2015,
+        # # 支薪周期
+        # 'salary_period':'月薪',
+        # 'salary':'10000',
+        # # 行業年資
+        # 'year':9,
+        # # 合約列明一周工時
+        # 'contract_hour':40,
+        # # 每周工時
+        # 'week_total_hour':40,
+        #
+        # # 超時
+        # 'OT_payment':u'有',
+        #
+        # # 加班補償
+        # 'OT_frequency': u'絕少',
+        # }
+        )
 
     # homepage: 用來highlight homepage 的 navbar
     return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal', "homepage":True})
@@ -294,7 +294,7 @@ def added(request):
 
             # 30 create 一個新的 post instance
             b = collected_data(
-                company=form['company'], # 公司名稱
+                company='test--'+form['company'], # 公司名稱
                 industry=form['industry'], # 行業
                 jobTitle=form['jobTitle'], #
                 location2=form['location2'],
@@ -317,7 +317,6 @@ def added(request):
         else:
             # 40 如果多於5 次，就出 error message
             messages.error(request, "你提交資料的次數超過5次")
-
     """
     傳送的data︰
     時間︰min, max, average
@@ -444,7 +443,7 @@ def jobs_gov_data_detail(request, model_name, id):
     return render(request, 'analysis.html', {'form': form,
     'hour_classification':hour_classification,
     'salary_classification':salary_classification,
-    'category': form['industry'], 'json':json_file, 'search':True})
+    'category': form['industry'], 'json':json_file, 'search':True, 'page':'detail'})
 
 # 用來在 search function 之中，找出想要display 出來的data list
 
@@ -457,7 +456,7 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
     if model_name=='job_gov_data':
         data_list = labor_gov_model
     elif model_name=='collected_data':
-        data_list = collected_data_model
+        data_list = collected_data_model.order_by('-id')
     elif model_name=='both':
         data_list = collected_data_model | labor_gov_model
 
