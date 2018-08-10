@@ -105,6 +105,7 @@ class labor_gov(models.Model):
     company = models.CharField(max_length=200)
     location = models.CharField(max_length=50)
     industry = models.CharField(max_length=50)
+    industry_2 = models.CharField(max_length=50)
     responsibility = models.TextField()
     treatment = models.TextField()
     category = models.CharField(max_length=10, null=True)

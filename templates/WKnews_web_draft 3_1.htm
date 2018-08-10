@@ -16,7 +16,7 @@
 <form id='job-form' action="{% url 'added' %}" method="post">
 	 {% csrf_token %}
 <div class="form-company" style="position:absolute; left:373px; top:430px; width:267px; height:26px;" title="">
-	{% if form.errors %}
+	<!-- {% if form.errors %}
         {% for field in form %}
         {% for error in field.errors %}
             <p> {{ errors }} </p>
@@ -25,14 +25,42 @@
         {% for error in form.non_field_errors %}
         <p> {{ error }} </p>
         {% endfor %}
-    {% endif %}
+    {% endif %} -->
 	{{ form.company }}<!-- 公司名稱 -->
 </div>
 
 
-<div style="position:absolute; left:649px; top:430px; width:186px; height:26px;" title="">
-	{{ form.industry }}<!-- 行業 -->
+<div class="form_industry_dropbox" style="position:absolute; left:649px; top:430px; width:186px; height:26px;" title="">
+	<div class="checkbox_choice">行業</div>
+
+	<div class="checkbox_wrapper">
+		{% for x in form.industry %}
+			<!-- {{ form.industry } -->
+			<!-- 行業 -->
+			{{ x }}
+			<!-- 行業 -->
+		{% endfor %}
+	</div>
 </div>
+<script>
+
+	$(".form_industry_dropbox").on('click', function(e){
+
+		$(".checkbox_wrapper").css("display", "block")
+		e.stopPropagation();
+
+	})
+
+	$(".checkbox_wrapper input").on('click', function(e){
+		let choice = $(this).attr('value');
+		$(".checkbox_wrapper").attr("style", "display:none");
+		e.stopPropagation();
+		$(".checkbox_choice").text(choice);
+
+		// $(".form_industry_dropbox").text()
+
+	})
+</script>
 
 <div style="position:absolute; left:373px; top:465px; width:267px; height:26px;" title="">
 	{{ form.jobTitle }}<!-- 職位名稱 -->

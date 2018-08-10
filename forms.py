@@ -93,8 +93,8 @@ class ContactForm(forms.ModelForm):
     widget=forms.TextInput(attrs={'placeholder': u'公司名稱'}),
     )
 
-    industry = forms.ChoiceField(widget=forms.Select(), choices=INDUSTRY_LIST, label='', initial='all')
-
+    industry = forms.ChoiceField(widget=forms.RadioSelect(), choices=INDUSTRY_LIST, label='', initial='all')
+    
     # 職位名稱
     jobTitle = forms.CharField(widget=forms.TextInput(attrs={ 'placeholder': u'職位名稱'}))
 

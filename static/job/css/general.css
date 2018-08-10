@@ -17,7 +17,6 @@ input {
   background-color: RGB(252, 238, 33);
   -webkit-rtl-ordering: logical;
   cursor: text;
-  padding: 0px;
   border-width: 0px;
   border-style: inset;
   border-color: initial;
@@ -72,6 +71,7 @@ div {
   font-family: "source-han-serif-tc"; }
 
 #overlay {
+  z-index: 10000;
   position: fixed;
   display: none;
   width: 100%;

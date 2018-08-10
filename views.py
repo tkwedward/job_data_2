@@ -42,44 +42,85 @@ def homepage(request):
     """
     data:
         form: 在頁面一開始時的問卷
+        sam: cleaned_form 的session
 
     return:
         form: 填好了的form 和 type: 'normal'是用來與 freelance的情況做區分
     """
 
+
     form = ContactForm(
-        # initial={
-        # 'company': '搵你笨保險有限公司',
-        # 'industry':'政府部門',
-        # # 職位名稱
-        # 'jobTitle':'保險推銷員',
-        # # 工作地點
-        # 'place':'東區',
-        # # 職務型態
-        # 'job_type':'全職',
-        # #工作天數
-        # 'date_number':'10',
-        # # 性別
-        # 'gender':'f',
-        # # 你最近從事這份工作的年份
-        # 'latest_year':2015,
-        # # 支薪周期
-        # 'salary_period':'月薪',
-        # 'salary':'10000',
-        # # 行業年資
-        # 'year':9,
-        # # 合約列明一周工時
-        # 'contract_hour':40,
-        # # 每周工時
-        # 'week_total_hour':40,
-        #
-        # # 超時
-        # 'OT_payment':u'有',
-        #
-        # # 加班補償
-        # 'OT_frequency': u'絕少',
-        # }
+            # initial={
+            # 'company': '搵你笨保險有限公司',
+            # 'industry':'保險',
+            # # 職位名稱
+            # 'jobTitle':'保險推銷員',
+            # # 工作地點
+            # 'place':'東區',
+            # # 職務型態
+            # 'job_type':'全職',
+            # #工作天數
+            # 'date_number':'10',
+            # # 性別
+            # 'gender':'f',
+            # # 你最近從事這份工作的年份
+            # 'latest_year':2015,
+            # # 支薪周期
+            # 'salary_period':'月薪',
+            # 'salary':'10000',
+            # # 行業年資
+            # 'year':9,
+            # # 合約列明一周工時
+            # 'contract_hour':40,
+            # # 每周工時
+            # 'week_total_hour':40,
+            #
+            # # 超時
+            # 'OT_payment':u'有',
+            #
+            # # 加班補償
+            # 'OT_frequency': u'絕少',
+            # }
         )
+
+    sam = request.session.get('cleaned_form', "")
+    if sam:
+        # print(sam)
+        form = ContactForm(
+                initial={
+                'company': sam['company'],
+                'industry':sam['industry'],
+                # 職位名稱
+                'jobTitle':sam['jobTitle'],
+                # 工作地點
+                'place':sam['location2'],
+                # 職務型態
+                'job_type':sam['job_type'],
+                #工作天數
+                'date_number':sam['working_day_number'],
+                # 性別
+                'gender':sam['gender'],
+                # 你最近從事這份工作的年份
+                'latest_year':sam['latest_year'],
+                # 支薪周期
+                'salary_period':sam['salary_type'],
+                'salary':sam['salary'],
+                # 行業年資
+                'year':sam['year'],
+                # 合約列明一周工時
+                'contract_hour':sam['contract_week_hour'],
+                # 每周工時
+                'week_total_hour':sam['week_total_hour'],
+
+                # 超時
+                'OT_payment':sam['OT_payment'],
+
+                # 加班補償
+                'OT_frequency':sam['OT_frequency'],
+                }
+            )
+
+        del request.session['cleaned_form']
 
     # homepage: 用來highlight homepage 的 navbar
     return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal', "homepage":True})
@@ -149,7 +190,8 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
         # model_used = model.filter(salary_type=form['salary_type'])
         pass
         # model_used = model
-    model_used = model.filter(salary_type='月薪')
+    model_used = model
+    # model_used = model.filter(salary_type='月薪')
     # 這裏的field1是 money或是 week_total_hour
     max_list = model_used.aggregate(maximum=Max(field1))
     mini_list = model_used.aggregate(minimum=Min(field1))
@@ -161,13 +203,13 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
     try:
         range_min = int(math.floor(float(mini_list['minimum'])))
     except Exception as e:
-        print(e, 'error in line 116')
+        print(e)
         print(mini_list)
         range_min=0
     try:
         range_max = int(math.ceil(float(max_list['maximum'])))
     except Exception as e:
-        print(e, 'error in line 121')
+        print(e)
         print(mini_list)
         range_max=50
     global combine_length
@@ -260,11 +302,15 @@ def added(request):
     """
 
     form = request.POST.dict()
+    print(form)
+
+    request.session['cleaned_form'] = form
     category_model = labor_gov_model.filter(industry=form['industry'])
 
     # 10 如果答應放入資料，就取出該用戶的uid
     if not request.user.is_authenticated():
-        # redirect_url = "oauth/login/facebook/"
+        redirect_url = "/oauth/login/facebook/"
+        # print(redirect_url)
         return JsonResponse({
             'error': 'error',
             'form': None,
@@ -272,6 +318,7 @@ def added(request):
             'salary_classification':None,
             'category': None
             })
+        # return HttpResponse("hi")
 
     # 取得用戶的 facebook uid, 如果找不到，代表沒有login，所以轉向 login page
     if request.user.is_authenticated():

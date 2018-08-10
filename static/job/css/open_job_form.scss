@@ -13,6 +13,43 @@
 #id_industry, #id_place {
   width: 186px; }
 
+#id_industry{
+  // visibility:hidden ;
+
+}
+.form_industry_dropbox{
+  background-color: RGB(252, 238, 33);
+  width: 267px;
+  padding: 5px;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+$checkbox_wrapper_width: 620;
+
+.checkbox_wrapper{
+  background-color: RGB(252, 238, 33);
+  position: absolute;
+  left:0px;
+  display: none;
+  width: $checkbox_wrapper_width;
+  height: 440px;
+  label {
+    width: $checkbox_wrapper_width/4;
+    position: relative;
+    left:10px;
+    display:list-item;
+    float: right;
+    list-style: none;
+    input{
+      position: relative;
+      top: 6px;
+      margin-right: 10px;
+    }
+  }
+}
+
+
 #id_company, #id_jobTitle {
   width: 267px; }
 

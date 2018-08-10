@@ -27,7 +27,6 @@ input{
   background-color: RGB(252, 238, 33);
   -webkit-rtl-ordering: logical;
   cursor: text;
-  padding: 0px;
   border-width: 0px;
   border-style: inset;
   border-color: initial;
@@ -48,13 +47,9 @@ select{
   border-color: RGB(252, 238, 33);
   border-image: initial;
   font-size: 12px;
-  // -webkit-appearance: none;
-  // -moz-appearance: none;
-
   height: 26px;
   padding: 0px;
   padding-left: 8px;
-
   }
 
 
@@ -108,6 +103,7 @@ div {
     }
 
     #overlay {
+      z-index: 10000;
         position: fixed;
         display: none;
         width: 100%;
