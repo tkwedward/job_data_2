@@ -56,7 +56,7 @@ class collected_data(models.Model):
     working_day_number = models.FloatField(blank=True, null=True)
 
     # 7. 性別
-    gender = models.CharField(max_length=5, choices=SEX_CHOICES)
+    gender = models.CharField(max_length=5, choices=SEX_CHOICES, null=True)
 
     # 8. 最近工作年份
     latest_year = models.CharField(blank=True, null=True, max_length=100)

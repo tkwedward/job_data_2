@@ -11,8 +11,8 @@ class labor_govAdmin(admin.ModelAdmin):
 
 class collected_dataAdmin(admin.ModelAdmin):
     model = collected_data
-    list_display = ('id','jobTitle', 'salary', 'salary_text','salary_type')
-    list_editable = ('salary', 'salary_text', 'salary_type')
+    list_display = ('id','jobTitle', 'industry', 'salary_text','salary_type')
+    list_editable = ('industry', 'salary_type')
 
 admin.site.register(labor_gov, labor_govAdmin)
 admin.site.register(Freelance)
