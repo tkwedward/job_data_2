@@ -96,3 +96,22 @@ p.heading{
 .next, .last{
   cursor: pointer;
 }
+
+.no_result_wrapper{
+    display: table;
+    $no_result_text_width: 600;
+    $no_result_text_height: 30;
+    .no_result_text{
+      font-size: 22px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: $no_result_text_width;
+      height: $no_result_text_height;
+      margin-left: -$no_result_text_width/2;
+      margin-bottom: $no_result_text_height/2;
+
+      // -$no_result_text_height/2+'px';
+    }
+
+}

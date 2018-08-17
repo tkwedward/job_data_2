@@ -263,8 +263,12 @@ if (which_one=='group'){
 
       if (json['error']){
         // $("#overlay").css('display', 'None')
-        $(".error").html('<a href="{% url 'social:begin' 'facebook' %}">(請登入Facebook後再提交表格)</a>')
-        console.log('請登入Facebook後再提交表格')
+        $(".error").html('<a href="{% url 'social:begin' 'facebook' %}">(按此登入Facebook並提交表格)</a>')
+        $(".error").on('click', ()=>{
+          // console.log("h");
+          // console.log({% url 'social:begin' 'facebook' %);
+          // { url 'social:begin' 'facebook' %}
+        })
       }
       else
       {

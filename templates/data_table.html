@@ -2,6 +2,9 @@
 <!-- data from view list,  -->
 
 <div class="data_table" style="position:absolute; left:86px; top:454px; width:1111px; height:506px; margin-top:7.376px;">
+
+
+{% if list %}
   {% for object in list %}
   <div class="job_row" style="height:25.229px; margin-bottom:7.376px"><!-- 每一行 -->
     <div class="job_row_box job_row_box_jobTitle" style="position:absolute; width:190px; height:25.229px;">
@@ -27,41 +30,56 @@
     <div class="job_row_box job_row_box_working_day_number" style="position:absolute; left:883px; width:110px; height:25.229px;" title="">
       {{ object.working_day_number }}<!-- 每週工作天數 -->
     </div>
-    <div class="job_row_box job_row_box_week_total_hour" style=" position:absolute; left:1001px; width:110px; height:25.229px;" title="">
-      {{ object.week_total_hour }}小時<!-- 每週工作時數 -->
-    </div>
+    {% if list.0.OT_frequency %}
+      <div class="job_row_box job_row_box_week_total_hour" style=" position:absolute; left:1001px; width:110px; height:25.229px;" title="">
+        {{ object.OT_frequency }}<!-- 加班情況 -->
+      </div>
+    {% else %}
+      <div class="job_row_box job_row_box_week_total_hour" style=" position:absolute; left:1001px; width:110px; height:25.229px;" title="">
+        {{ object.week_total_hour }}小時
+        <!-- 每週工作時數 -->
+      </div>
+    {% endif %}
+
   </div><!-- 每一行 -->
   {% endfor %}
-</div><!-- 資料table -->
-<div style="background-image:url({% static 'job/image/images/WKnews-web-draft-3_search_72.jpg' %}); position:absolute; left:284px; top:791px; width:597px; height:36px;" title="">
-</div>
-<div style="position:absolute; left:480px; top:803px; width:83px; height:26px;" title="">
-  <span>第{{list.number}}頁</span>
-
-</div>
-
-<div style="position:absolute; left:1065px; top:785px; width:160px; height:26px; font-size:12px;" title="">
-  <span> 部份資料來自勞工處網站 </span>
-</div>
-
-  {% if list.has_previous %}
-    <div class="last" style="background-image:url({% static 'job/image/images/left_arrow.svg' %}) ;position:absolute; left:403px; top:803px; width:50px; height:21px;" title="" data-page="{{ list.previous_page_number }}">
+{% else %}
+  <div class="no_result_wrapper" style="position:absolute;left:0px;top:0px;width:1111px;height: 300px;margin-top:7.376px;">
+    <div class="no_result_text">
+      對不起，我們沒有相關記錄。我們等待你加入更多資料。
     </div>
-      <!-- <a href="?{{ paginator_link}}&page={{ list.previous_page_number }}#search_top">previous</a> -->
-  {% endif %}
+  </div>
 
+{% endif %}
+</div><!-- 資料table -->
 
+{% if list %}
+  <div style="position:absolute; left:480px; top:803px; width:83px; height:26px;" title="">
+    <span>第{{list.number}}頁</span>
+  </div>
 
+  <div style="position:absolute; left:1065px; top:785px; width:160px; height:26px; font-size:12px;" title="">
+    <span> 部份資料來自勞工處網站 </span>
+  </div>
 
-  {% if list.has_next %}
-    {% if paginator_link %}
-      {% if list.next_page_number > 0 %}
-      <div class='next' style="background-image:url({% static 'job/image/images/right_arrow.svg' %}); position:absolute; left:537px; top:804px; width:49px; height:20px;" title="" data-page="{{ list.next_page_number }}">
+    {% if list.has_previous %}
+      <div class="last" style="background-image:url({% static 'job/image/images/left_arrow.svg' %}) ;position:absolute; left:403px; top:803px; width:50px; height:21px;" title="" data-page="{{ list.previous_page_number }}">
       </div>
+        <!-- <a href="?{{ paginator_link}}&page={{ list.previous_page_number }}#search_top">previous</a> -->
+    {% endif %}
+
+
+
+
+    {% if list.has_next %}
+      {% if paginator_link %}
+        {% if list.next_page_number > 0 %}
+        <div class='next' style="background-image:url({% static 'job/image/images/right_arrow.svg' %}); position:absolute; left:537px; top:804px; width:49px; height:20px;" title="" data-page="{{ list.next_page_number }}">
+        </div>
+        {% endif %}
       {% endif %}
     {% endif %}
-  {% endif %}
-
+{% endif %}<!-- if list -->
 <script>
   $('.next, .last').click(function() {
      data_table_generator($(this))

@@ -131,13 +131,6 @@
 
 	<div style="position:absolute; left:515px; top:745px; width:358px; height:70.124px; font-size:12px; color: RGB(252, 238, 33)" >
 
-
-
-
-
-
-
-
 	<div id="overlay">
 		<div class="close-button" onclick="off()" style="position:absolute; left:1100px; top:20px; width:22px; height:22px; font-size:22px">
 			&#10006;
@@ -219,80 +212,74 @@
 			</div> <!-- title -->
 		</div><!-- overlay_button -->
 	</div><!-- myDiv -->
+</div><!-- overlay -->
 
-	</div><!-- overlay -->
-
-
-
-	<script src="https://d3js.org/d3.v4.min.js"></script>
-	<script src="https://d3js.org/queue.v1.min.js"></script>
-	<script src="https://d3js.org/topojson.v1.min.js"></script>
-
-
-
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/queue.v1.min.js"></script>
+<script src="https://d3js.org/topojson.v1.min.js"></script>
 
 </body>
 </html>
 <style>
-#loader{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 1;
-  width: 150px;
-  height: 150px;
-  margin: -75px 0 0 -75px;
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid RGB(252, 238, 33);
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-}
+	#loader{
+	  position: absolute;
+	  left: 50%;
+	  top: 50%;
+	  z-index: 1;
+	  width: 150px;
+	  height: 150px;
+	  margin: -75px 0 0 -75px;
+	  border: 16px solid #f3f3f3;
+	  border-radius: 50%;
+	  border-top: 16px solid RGB(252, 238, 33);
+	  width: 120px;
+	  height: 120px;
+	  -webkit-animation: spin 2s linear infinite;
+	  animation: spin 2s linear infinite;
+	}
 
-#loader-text {
-	position: absolute;
-  left: 46%;
-  top: 65%;
-	font-size: 20px;
-	width: 120px;
-  height: 120px;
-}
+	#loader-text {
+		position: absolute;
+	  left: 46%;
+	  top: 65%;
+		font-size: 20px;
+		width: 120px;
+	  height: 120px;
+	}
 
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
+	@-webkit-keyframes spin {
+	  0% { -webkit-transform: rotate(0deg); }
+	  100% { -webkit-transform: rotate(360deg); }
+	}
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+	@keyframes spin {
+	  0% { transform: rotate(0deg); }
+	  100% { transform: rotate(360deg); }
+	}
 
-/* Add animation to "page content" */
-.animate-bottom {
-  position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
-}
+	/* Add animation to "page content" */
+	.animate-bottom {
+	  position: relative;
+	  -webkit-animation-name: animatebottom;
+	  -webkit-animation-duration: 1s;
+	  animation-name: animatebottom;
+	  animation-duration: 1s
+	}
 
-@-webkit-keyframes animatebottom {
-  from { bottom:-100px; opacity:0 }
-  to { bottom:0px; opacity:1 }
-}
+	@-webkit-keyframes animatebottom {
+	  from { bottom:-100px; opacity:0 }
+	  to { bottom:0px; opacity:1 }
+	}
 
-@keyframes animatebottom {
-  from{ bottom:-100px; opacity:0 }
-  to{ bottom:0; opacity:1 }
-}
+	@keyframes animatebottom {
+	  from{ bottom:-100px; opacity:0 }
+	  to{ bottom:0; opacity:1 }
+	}
 
-#myDiv {
-  display: none;
-  text-align: center;
-}
+	#myDiv {
+	  display: none;
+	  text-align: center;
+	}
 </style>
 
 <link rel="stylesheet" type="text/css" href="{% static 'job/css/open_job_form.css' %}" />

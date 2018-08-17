@@ -71,4 +71,16 @@ p.heading {
 .next, .last {
   cursor: pointer; }
 
+.no_result_wrapper {
+  display: table; }
+  .no_result_wrapper .no_result_text {
+    font-size: 22px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 600;
+    height: 30;
+    margin-left: -300;
+    margin-bottom: 15; }
+
 /*# sourceMappingURL=search_page.css.map */
