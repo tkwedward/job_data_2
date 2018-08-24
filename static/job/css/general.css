@@ -37,7 +37,8 @@ select {
   font-size: 12px;
   height: 26px;
   padding: 0px;
-  padding-left: 8px; }
+  padding-left: 8px;
+  cursor: pointer; }
 
 .tri {
   float: right;

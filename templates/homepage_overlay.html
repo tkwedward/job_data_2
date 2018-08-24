@@ -29,8 +29,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>
+console.log("hi");
 $('#job-form').on('submit', function(event){
 	event.preventDefault();
+  document.getElementById("overlay").style.display = "block";
+  myVar = setTimeout(showPage, 4000);
 	on()
 });
 
@@ -40,7 +43,7 @@ $('#job-form').on('submit', function(event){
  hour_or_salary︰在傳來的json 中，選擇是用hour或是用salary classification. value = 'hour_classification' or 'salary_classification'
 */
 function draw_the_graph(json, svg_frame, svg_title, x_title_text, title_text,  hour_or_salary, text_color, graph_y_height){
-	myVar = setTimeout(showPage, 3000);
+
 	var hour_data = $.parseJSON(json[hour_or_salary])
 
 	// [0-5, 5-10, ...]
@@ -173,6 +176,7 @@ function graph_distance(title_1_top, title_2_top, graph_title_distance, offset=0
 
 // 如果是在 search_page 看的話︰
 if (which_one=='group'){
+	// json_file = {{json|safe}}
 	json_file = {{json|safe}}
   // 畫工時的Graph
 	draw_the_graph(json_file, svg_frame='svg.graph_1', svg_title='svg.title_1', x_title_text='小時', title_text='工時',  hour_or_salary='hour_classification', text_color='RGB(0,0,0)', graph_y_height='150')
@@ -259,19 +263,13 @@ if (which_one=='group'){
 		// handle a successful response
 		success : function(json) {
 			// var data = json['json_classification']
-      $(".error").html('')
-
+      // $(".error").html('')
       if (json['error']){
-        // $("#overlay").css('display', 'None')
-        $(".error").html('<a href="{% url 'social:begin' 'facebook' %}">(按此登入Facebook並提交表格)</a>')
-        $(".error").on('click', ()=>{
-          // console.log("h");
-          // console.log({% url 'social:begin' 'facebook' %);
-          // { url 'social:begin' 'facebook' %}
-        })
+        window.location = "{% url 'social:begin' 'facebook' %}"
       }
       else
       {
+        // console.log({{json|safe}});
         document.getElementById("overlay").style.display = "block";
         var graph_height = 180
   			var title_1_top = 240
@@ -306,5 +304,11 @@ if (which_one=='group'){
 }// end if individual
 
 // 關閉overlay
+var click_JSON = "{{click_JSON}}" ? true : false
+console.log(click_JSON);
+if (click_JSON){
+  $("#job-form").submit()
+}
+
 
 </script>

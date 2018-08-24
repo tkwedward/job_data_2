@@ -137,7 +137,6 @@ def get_Paginator(data_list, request, page_from_link=None):
     return data_show, show_page_list
 
 def statistic(type, field1, data_list, model=None, form=None, step=None):
-    print(type, field1, data_list)
     """
     arg:
         type = 是想找 工時() 或是 工資() 的statistic
@@ -200,8 +199,8 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
     try:
         range_min = int(math.floor(float(mini_list['minimum'])))
     except Exception as e:
-        print(e)
-        print(mini_list)
+        # print(e)
+        # print(mini_list)
         range_min=0
     try:
         range_max = int(math.ceil(float(max_list['maximum'])))
@@ -215,8 +214,7 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
     combine_number = set()
     max_bar = 13
     # the following is for data generation
-
-
+    
     for counter ,x in enumerate(range(0, range_max, step)):
         """
             這裏的 x 是 range list 之中的某個數值

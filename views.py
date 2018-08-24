@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Avg, Max, Min, Q
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.template import RequestContext,Template
 from django.template.loader import render_to_string
 from django.templatetags.static import static
@@ -38,19 +38,145 @@ labor_gov_model = labor_gov.objects.exclude(working_hours_number=None).exclude(w
 category_model=None
 
 # 首頁的view
+
+def JSON_Result(request, submitted_form):
+    form = submitted_form
+    category_model = labor_gov_model.filter(industry=form['industry'])
+
+    uid =  request.user.social_auth.get(provider='facebook').uid
+
+    # 取得用戶的 object，如果沒有就 create一個新的
+    try:
+        user = User.objects.get(uid=uid)
+    except:
+        User.objects.create(uid=uid)
+        user = User.objects.get(uid=uid)
+
+    user_post_number = len(collected_data.objects.filter(uid=user))
+
+    # 20 如果 user_post_number 少於5, 就手動加入id
+    if user_post_number < 5:
+        # 因為經過 pandas 後，id 會變成 null，所以要手動加入 id，這裏的next_id是抽 database 中最後的id
+        next_id = collected_data_model.aggregate(maximum=Max('id'))['maximum']+1
+
+        # 30 create 一個新的 post instance
+        b = collected_data(
+            company='test--'+form['company'], # 公司名稱
+            industry=form['industry'], # 行業
+            jobTitle=form['jobTitle'], #
+            location2=form['location2'],
+            salary_type=form['salary_type'],# 工作形態
+            job_type=form['salary_type'],# 工作形態
+            gender=form['gender'],#性別
+            latest_year=form['latest_year'],
+            salary=form['salary'],
+            contract_week_hour=form['contract_week_hour'],
+            year_of_working=form['year'],
+            week_total_hour=form['week_total_hour'],
+            OT_frequency=form['OT_frequency'],
+            OT_payment=form['OT_payment'],
+            working_day_number=form['working_day_number'],
+            id=next_id,
+            uid=user,
+            date=datetime.datetime.now().date()
+        )
+        b.save()
+    else:
+        # 40 如果多於5 次，就出 error message
+        messages.error(request, "你提交資料的次數超過5次")
+    """
+    傳送的data︰
+    時間︰min, max, average
+    組別︰category
+    """
+    salary_classification = []
+    salary_step = None
+    salary_start_value = None
+    salary_color=None
+    hour_classification = []
+    hour_step = 5
+    hour_start_value = 0
+    hour_color=None
+
+    if (form['salary_type']==u'月薪'):
+        salary_step = 2000
+    elif (form['salary_type']==u'日薪'):
+        salary_step = 50
+    elif (form['salary_type']==u'時薪'):
+        salary_step = 10
+
+    # money
+    salary_classification = json.dumps(statistic(type='salary', field1='salary', data_list=salary_classification, model=category_model, form=form, step=salary_step))
+
+    # working hour
+    hour_classification = json.dumps(statistic(type='week_total_hour', field1='week_total_hour', data_list=hour_classification, model=category_model, form=form, step=hour_step))
+    # print(hour_classification)
+    # return redirect(about_us)
+    return {
+        'form': submitted_form,
+        'hour_classification':hour_classification,
+        'salary_classification':salary_classification,
+        'category': submitted_form['industry']}
+    # return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal', "homepage":True, 'json':hour_classification, "show_overlay":True})
+
 def homepage(request):
     """
     data:
         form: 在頁面一開始時的問卷
-        sam: cleaned_form 的session
+        cleaned_form: cleaned_form 的session
 
     return:
         form: 填好了的form 和 type: 'normal'是用來與 freelance的情況做區分
     """
+
+    cleaned_form = request.session.get('cleaned_form', "")
+
+    if cleaned_form:
+        print(cleaned_form)
+        del request.session['cleaned_form']
+        form = ContactForm(initial={
+            'company': cleaned_form['company'],
+            'industry':cleaned_form['industry'],
+            # 職位名稱
+            'jobTitle':cleaned_form['jobTitle'],
+            # 工作地點
+            'place':cleaned_form['location2'],
+            # 職務型態
+            'job_type':cleaned_form['job_type'],
+            #工作天數
+            'date_number':cleaned_form['working_day_number'],
+            # 性別
+            'gender':cleaned_form['gender'],
+            # 你最近從事這份工作的年份
+            'latest_year':cleaned_form['latest_year'],
+            # 支薪周期
+            'salary_period':cleaned_form['salary_type'],
+            'salary':cleaned_form['salary'],
+            # 行業年資
+            'year':cleaned_form['year'],
+            # 合約列明一周工時
+            'contract_hour':cleaned_form['contract_week_hour'],
+            # 每周工時
+            'week_total_hour':cleaned_form['week_total_hour'],
+
+            # 超時
+            'OT_payment':cleaned_form['OT_payment'],
+
+            # 加班補償
+            'OT_frequency':cleaned_form['OT_frequency'],
+        }) # ContactForm
+
+        # return 的是一個 JsonResponse({ 'form': submitted_form, 'hour_classification':hour_classification, 'salary_classification':salary_classification,'category': submitted_form['industry']} )
+        # 現在的問題是在 login 後能夠出到
+
+        # return redirect(added)
+        return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal', "homepage":True, 'click_JSON':True})
+
+
     form = ContactForm(
             initial={
             'company': '搵你笨保險有限公司',
-            'industry':'保險',
+            'industry':u'保險',
             # 職位名稱
             'jobTitle':'保險推銷員',
             # 工作地點
@@ -81,45 +207,6 @@ def homepage(request):
             }
         )
 
-    sam = request.session.get('cleaned_form', "")
-    if sam:
-        print(sam)
-        form = ContactForm(
-                initial={
-                'company': sam['company'],
-                'industry':sam['industry'],
-                # 職位名稱
-                'jobTitle':sam['jobTitle'],
-                # 工作地點
-                'place':sam['location2'],
-                # 職務型態
-                'job_type':sam['job_type'],
-                #工作天數
-                'date_number':sam['working_day_number'],
-                # 性別
-                'gender':sam['gender'],
-                # 你最近從事這份工作的年份
-                'latest_year':sam['latest_year'],
-                # 支薪周期
-                'salary_period':sam['salary_type'],
-                'salary':sam['salary'],
-                # 行業年資
-                'year':sam['year'],
-                # 合約列明一周工時
-                'contract_hour':sam['contract_week_hour'],
-                # 每周工時
-                'week_total_hour':sam['week_total_hour'],
-
-                # 超時
-                'OT_payment':sam['OT_payment'],
-
-                # 加班補償
-                'OT_frequency':sam['OT_frequency'],
-                }
-            )
-
-        del request.session['cleaned_form']
-
     # homepage: 用來highlight homepage 的 navbar
     return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal', "homepage":True})
 
@@ -135,7 +222,12 @@ type 是從 salary 或 working_hour 二選一
 field1是放入由ajax 傳送過來的form中其中的field value，如果是 type 是 salary，這裏的field value會是工時，否則就是none
 """
 
-@require_POST
+
+def afterFacebookLogin(request):
+    return redirect("added")
+
+
+# @require_POST
 def added(request):
     """
     data:
@@ -175,15 +267,13 @@ def added(request):
         - category︰行業
     """
 
-    form = request.POST.dict()
-
-    request.session['cleaned_form'] = form
-    category_model = labor_gov_model.filter(industry=form['industry'])
-
     # 10 如果答應放入資料，就取出該用戶的uid
     if not request.user.is_authenticated():
-        redirect_url = "/oauth/login/facebook/"
-        # print(redirect_url)
+        print("unauthenticated")
+        request.session['cleaned_form'] = request.POST.dict()
+        # redirect_url = "/oauth/login/facebook/"
+        # return redirect("social:begin", "facebook")
+        # return HttpResponsePermanentRedirect(redirect_url)
         return JsonResponse({
             'error': 'error',
             'form': None,
@@ -191,85 +281,24 @@ def added(request):
             'salary_classification':None,
             'category': None
             })
-
     # 取得用戶的 facebook uid, 如果找不到，代表沒有login，所以轉向 login page
     if request.user.is_authenticated():
-        uid =  request.user.social_auth.get(provider='facebook').uid
+        print("authenticated")
+        submitted_form = request.session.get('cleaned_form', "")
 
-        # 取得用戶的 object，如果沒有就 create一個新的
-        try:
-            user = User.objects.get(uid=uid)
-        except:
-            User.objects.create(uid=uid)
-            user = User.objects.get(uid=uid)
+        if not submitted_form:
+             submitted_form = request.POST.dict()
+        json_result = JSON_Result(request, submitted_form)
+        print(json_result)
+        return JsonResponse(json_result)
+        # return redirect(homepage)
 
-        user_post_number = len(collected_data.objects.filter(uid=user))
-        print(user_post_number)
-
-        # 20 如果 user_post_number 少於5, 就手動加入id
-        if user_post_number < 5:
-            # 因為經過 pandas 後，id 會變成 null，所以要手動加入 id，這裏的next_id是抽 database 中最後的id
-            next_id = collected_data_model.aggregate(maximum=Max('id'))['maximum']+1
-
-            # 30 create 一個新的 post instance
-            b = collected_data(
-                company='test--'+form['company'], # 公司名稱
-                industry=form['industry'], # 行業
-                jobTitle=form['jobTitle'], #
-                location2=form['location2'],
-                salary_type=form['salary_type'],# 工作形態
-                job_type=form['salary_type'],# 工作形態
-                gender=form['gender'],#性別
-                latest_year=form['latest_year'],
-                salary=form['salary'],
-                contract_week_hour=form['contract_week_hour'],
-                year_of_working=form['year'],
-                week_total_hour=form['week_total_hour'],
-                OT_frequency=form['OT_frequency'],
-                OT_payment=form['OT_payment'],
-                working_day_number=form['working_day_number'],
-                id=next_id,
-                uid=user,
-                date=datetime.datetime.now().date()
-            )
-            b.save()
-        else:
-            # 40 如果多於5 次，就出 error message
-            messages.error(request, "你提交資料的次數超過5次")
-    """
-    傳送的data︰
-    時間︰min, max, average
-    組別︰category
-    """
-    salary_classification = []
-    salary_step = None
-    salary_start_value = None
-    salary_color=None
-    hour_classification = []
-    hour_step = 5
-    hour_start_value = 0
-    hour_color=None
-
-    if (form['salary_type']==u'月薪'):
-        salary_step = 2000
-    elif (form['salary_type']==u'日薪'):
-        salary_step = 50
-    elif (form['salary_type']==u'時薪'):
-        salary_step = 10
-
-    # money
-    salary_classification = json.dumps(statistic(type='salary', field1='salary', data_list=salary_classification, model=category_model, form=form, step=salary_step))
-
-    # working hour
-    hour_classification = json.dumps(statistic(type='week_total_hour', field1='week_total_hour', data_list=hour_classification, model=category_model, form=form, step=hour_step))
-
-
-    return JsonResponse({
-        'form': form,
-        'hour_classification':hour_classification,
-        'salary_classification':salary_classification,
-        'category': form['industry']}
-        )
+        # return JsonResponse({
+        #     'form': submitted_form,
+        #     'hour_classification':hour_classification,
+        #     'salary_classification':salary_classification,
+        #     'category': submitted_form['industry']}
+        #     )
 
 def success(request):
     """
@@ -339,11 +368,8 @@ def jobs_gov_data_detail(request, model_name, id):
         'salary': instance.salary,
     }
 
-    # print(instance.industry, instance.category)
-
     # category_model = labor_gov_model.filter(category=instance.category)
     category_model = labor_gov_model.filter(industry=instance.industry)
-    print(category_model)
     # money
     salary_classification = json.dumps(statistic(type='salary', field1='salary', data_list=salary_classification, model=category_model, form=form, step=salary_step))
 
@@ -355,7 +381,6 @@ def jobs_gov_data_detail(request, model_name, id):
         'salary_classification':salary_classification,
         'category': form['industry']
         }
-    print(salary_classification)
     json_file = json.dumps(result_file)
 
     return render(request, 'analysis.html', {'form': form,
@@ -381,7 +406,6 @@ def jobs_gov_data(request):
 def get_search(request, position="", industry="", location="", salary="", salary_type="", salary_filter="", data_list_order_by="", data_list_sort_by="", page_from_link=1):
     data_list = []
     if request.is_ajax():
-        print('I am using ajax')
         position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
 
         paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)

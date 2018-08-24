@@ -34,6 +34,7 @@ $checkbox_wrapper_width: 620;
   display: none;
   width: $checkbox_wrapper_width;
   height: 440px;
+  cursor: pointer;
   label {
     width: $checkbox_wrapper_width/4;
     position: relative;
