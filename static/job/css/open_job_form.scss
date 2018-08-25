@@ -27,6 +27,9 @@
 
 $checkbox_wrapper_width: 620;
 
+.checkbox_choice{
+  cursor: pointer;
+}
 .checkbox_wrapper{
   background-color: RGB(252, 238, 33);
   position: absolute;

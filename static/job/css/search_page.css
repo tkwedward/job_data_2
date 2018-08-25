@@ -33,14 +33,40 @@ p.heading {
 #input-with-keypress-1, #input-with-keypress-0 {
   width: 50%; }
 
-#id_keyword, #id_location {
-  width: 267px; }
+#id_keyword {
+  position: absolute;
+  left: 729px;
+  top: 211px;
+  height: 26px;
+  width: 233px; }
+
+#id_company {
+  position: absolute;
+  left: 968px;
+  top: 211px;
+  width: 233px;
+  height: 26px; }
+
+#id_location {
+  position: absolute;
+  left: 727px;
+  top: 246px;
+  height: 26px;
+  width: 155; }
 
 #id_industry {
-  width: 186px; }
+  position: absolute;
+  left: 1047px;
+  top: 246px;
+  height: 26px;
+  width: 155; }
 
 #id_salary_type {
-  width: 186px; }
+  position: absolute;
+  left: 888px;
+  top: 246px;
+  width: 155;
+  height: 26px; }
 
 #input-with-keypress-0, #input-with-keypress-1 {
   text-align: center; }

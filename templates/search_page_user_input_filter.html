@@ -1,5 +1,17 @@
 <script>
   function data_table_generator(selector){
+    console.log( $("span.last_column").text());
+    var next_text = $(".last_column").html() == "加班頻率" ? "每週工時" : "加班頻率"
+    if (next_text=="加班頻率"){
+      $(".job_row_header_week_total_hour .tri").css("visibility", "hidden")
+    } else {
+      $(".job_row_header_week_total_hour .tri").css("visibility", "visible")
+    }
+
+
+
+
+    $("span.last_column").text(next_text)
     var position = $('#id_keyword').val()
     var industry = $('#id_industry').val()
     var location = $('#id_location').val()
@@ -30,6 +42,7 @@
 
           //根據 search form 和排列次序，更新data table中的html
           k =result['html']
+
           $(".data_table_bundle").html(k)
         }
   }); // end of ajax

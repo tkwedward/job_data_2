@@ -9,7 +9,7 @@ collected_data_model = collected_data.objects.all()
 labor_gov_model = labor_gov.objects.exclude(working_hours_number=None).exclude(working_hours_number='').exclude(week_total_hour=0.0)
 category_model=None
 
-def get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by="", data_list_sort_by="", model_name=""):
+def get_data_list(position, company, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by="", data_list_sort_by="", model_name=""):
     """
     用來處理
     """
@@ -22,7 +22,12 @@ def get_data_list(position, industry, location, upper_limit, lower_limit, salary
         data_list = collected_data_model | labor_gov_model
 
     if position:
+        print("before", len(data_list))
         data_list = data_list.filter(jobTitle__contains=position)
+    if company:
+        print("before", len(data_list))
+        data_list = data_list.filter(company__contains=unicode(company))
+        print("after", len(data_list))
     if industry and industry!='all':
         data_list = data_list.filter(industry=industry)
     if location and location!='all':
@@ -54,6 +59,7 @@ def get_data_from_the_url(request):
     """
     data:
     - position: 工作名稱
+    - company: 公司
     - industry: 行業
     - location: 地點
     - upper_limit: 最高工資
@@ -71,6 +77,7 @@ def get_data_from_the_url(request):
     """
     # print('I am using get_data_from_the_url')
     position = request.GET.get('keyword')
+    company = request.GET.get('company')
     industry = request.GET.get('industry')
     location = request.GET.get('location')
     upper_limit = request.GET.get('upper_limit')
@@ -80,14 +87,15 @@ def get_data_from_the_url(request):
     data_list_sort_by = request.GET.get('type')
     page = request.GET.get('page', 1)
     model_name = request.GET.get('model_name')
-    # print(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page)
-    return position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name
 
-def get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by):
+    return position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name
+
+def get_paginator_link(position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by):
 
     """
     arg:
     - position: 工作名稱
+    - company: 公司
     - industry: 行業
     - location: 地點
     - upper_limit: 最高工資
@@ -104,7 +112,7 @@ def get_paginator_link(position, industry, location, salary_type, upper_limit, l
     - paginator 中的 url
     """
 
-    paginator_link = "keyword={}&industry={}&location={}&salary_type={}&upper_limit={}&lower_limit={}&data_list_order_by={}&data_list_sort_by={}".format(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
+    paginator_link = "keyword={}&company={}&industry={}&location={}&salary_type={}&upper_limit={}&lower_limit={}&data_list_order_by={}&data_list_sort_by={}".format(position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
     return paginator_link
 
 def get_Paginator(data_list, request, page_from_link=None):
@@ -214,7 +222,7 @@ def statistic(type, field1, data_list, model=None, form=None, step=None):
     combine_number = set()
     max_bar = 13
     # the following is for data generation
-    
+
     for counter ,x in enumerate(range(0, range_max, step)):
         """
             這裏的 x 是 range list 之中的某個數值

@@ -20,6 +20,9 @@
   font-size: 12px;
   z-index: 1; }
 
+.checkbox_choice {
+  cursor: pointer; }
+
 .checkbox_wrapper {
   background-color: RGB(252, 238, 33);
   position: absolute;

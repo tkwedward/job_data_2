@@ -392,9 +392,9 @@ def jobs_gov_data(request):
     search_form = Search_Bar_Form()
     model_used=labor_gov_model
 
-    position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
+    position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
 
-    paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
+    paginator_link = get_paginator_link(position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
 
     data_list = model_used.exclude(week_total_hour=0.0)
 
@@ -403,14 +403,14 @@ def jobs_gov_data(request):
     return render(request, 'search_page3.htm', {'list': data_show, 'form': search_form, 'paginator_link':paginator_link, #'category_list':CATEGORY_CHOICES,
     'show_page_list':show_page_list, 'search':True})
 
-def get_search(request, position="", industry="", location="", salary="", salary_type="", salary_filter="", data_list_order_by="", data_list_sort_by="", page_from_link=1):
+def get_search(request, position="", industry="", location="", salary="", salary_type="", salary_filter="", company="", data_list_order_by="", data_list_sort_by="", page_from_link=1):
     data_list = []
     if request.is_ajax():
-        position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
+        position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
 
-        paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
+        paginator_link = get_paginator_link(position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
 
-        data_list = get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by, model_name)
+        data_list = get_data_list(position, company, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by, model_name)
 
         """paginator"""
         data_show, show_page_list = get_Paginator(data_list, request, page)
@@ -420,11 +420,11 @@ def get_search(request, position="", industry="", location="", salary="", salary
         return JsonResponse({'html':html})
     else:
         search_form = Search_Bar_Form(request.GET)
-        position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
+        position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by, page, model_name = get_data_from_the_url(request)
 
-        paginator_link = get_paginator_link(position, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
+        paginator_link = get_paginator_link(position, company, industry, location, salary_type, upper_limit, lower_limit, data_list_order_by, data_list_sort_by)
 
-        data_list = get_data_list(position, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by, model_name)
+        data_list = get_data_list(position, company, industry, location, upper_limit, lower_limit, salary_type, data_list_order_by, data_list_sort_by, model_name)
 
         """paginator"""
         data_show, show_page_list = get_Paginator(data_list, request, page_from_link)

@@ -25,6 +25,8 @@ class Search_Bar_Form(forms.Form):
         required=False
         )
 
+    company = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': '公司名稱'}), max_length=30, label='', required=False)
     location = forms.CharField(
         widget=forms.Select(choices=DISTRICT_LIST), required=False, label='', initial='all'
     )
@@ -94,7 +96,7 @@ class ContactForm(forms.ModelForm):
     )
 
     industry = forms.ChoiceField(widget=forms.RadioSelect(), choices=INDUSTRY_LIST, label='', initial='all')
-    
+
     # 職位名稱
     jobTitle = forms.CharField(widget=forms.TextInput(attrs={ 'placeholder': u'職位名稱'}))
 

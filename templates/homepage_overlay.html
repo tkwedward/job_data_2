@@ -79,14 +79,16 @@ function draw_the_graph(json, svg_frame, svg_title, x_title_text, title_text,  h
 
 	svg_1.append('g')
 		 .attr('class', 'chart_group')
+     .attr('transform', 'translate(0, 20)')
 
 	var graph_width = bar_width*hour_data.length
-	svg_1.style('height', height*1.25)
+	svg_1.style('height', height*1.4)
 	svg_1.style('width', graph_width)
-	svg_1.style('left', (1280-graph_width)/2 )
+	svg_1.style('left', (1280-graph_width)/2)
 
+  var chart_group = svg_1.select('.chart_group')
 // bar
-	svg_1.select('.chart_group')
+	chart_group
 		 .selectAll('rect.bar')
 			.data(hour_data)
 			.enter().append('rect')
@@ -96,10 +98,18 @@ function draw_the_graph(json, svg_frame, svg_title, x_title_text, title_text,  h
 			.attr('width', 20)
 			.attr('y', d=> yScale(d.number))
 			.attr('height', d=> height-yScale(d.number) )
-			.style('fill', d => d.color);
+			.style('fill', d => d.color)
+      .on("mouseover", function(d,i){
+        var bar_texts = d3.select(svg_frame).selectAll(".bar_number")["_groups"][0]
+        d3.select(bar_texts[i]).style("visibility", "visible");
+      })
+      .on("mouseout", function(d,i){
+        var bar_texts = d3.select(svg_frame).selectAll(".bar_number")["_groups"][0]
+        d3.select(bar_texts[i]).style("visibility", "hidden");
+      })
 
 // x axis的刻度
-		svg_1.select('.chart_group')
+		chart_group
 			.selectAll('rect.bar')
 			.select('text')
 			.data(hour_data)
@@ -111,19 +121,30 @@ function draw_the_graph(json, svg_frame, svg_title, x_title_text, title_text,  h
 			.style('fill',text_color)
 
 // 寫下每個data的數字
-		svg_1.select('.chart_group')
-			.selectAll('rect.bar')
-			.select('text')
-			.data(hour_data)
-			.enter().append('text')
-			.text(d=>d.number)
-			.attr('x', (d,i)=>i*bar_width)
-			.attr('y',d=> 100)
-			.style("font-size", "10px")
-			.style('fill',text_color)
+		chart_group.selectAll('rect.bar')
+             .select('text')
+             .data(hour_data)
+             .enter().append('text')
+             .attr("class", "bar_number")
+             .text(d=>d.number)
+			       .attr('x', (d,i)=>{
+                  return i*bar_width})
+			       .attr('y',d=> -10)
+			       .style("font-size", "10px")
+			       .style('fill',text_color)
+
+    var bar_texts =
+    d3.select(svg_frame).selectAll(".bar_number")["_groups"][0]
+    bar_texts.forEach( d=>{
+      let text_width = d.getBBox()['width']
+      console.log(bar_width-text_width)
+      d3.select(d).attr('transform', `translate(${(20-text_width)/2},0)`)
+      .style("visibility", "hidden")
+    })
+    // console.log(d3.select(d3.selectAll(".bar_number")["_groups"][0][1]).node().getBBox())
 
 //x-axis的title︰小時或金錢
-	svg_1.select('.chart_group')
+	chart_group
 		 .append('text')
 		 .text(x_title_text)
 		 .attr('y',height*1.2)
