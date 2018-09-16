@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAAA,gBAAgB;EACd,gBAAgB,EAAE,eAAe;;AAGjC,uBAAC;EACC,SAAS,EAAC,IAAI;EACd,KAAK,EAAC,iBAAiB;EACvB,eAAe,EAAE,IAAI;;AAIzB,qBAAqB;EACnB,OAAO,EAAE,OAAO;;AAElB,eAAe;EACb,OAAO,EAAE,GAAG",
+"mappings": "AAAA,gBAAgB;EACd,gBAAgB,EAAE,eAAe;;AAGjC,uBAAC;EACC,SAAS,EAAC,IAAI;EACd,KAAK,EAAC,iBAAiB;EACvB,eAAe,EAAE,IAAI;;AAIzB,qBAAqB;EACnB,OAAO,EAAE,OAAO;;AAElB,eAAe;EACb,OAAO,EAAE,GAAG;;AAGd,aAAa;EACX,KAAK,EAAE,OAAiB",
 "sources": ["analysis_page.scss"],
 "names": [],
 "file": "analysis_page.css"

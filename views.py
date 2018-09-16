@@ -172,39 +172,40 @@ def homepage(request):
         # return redirect(added)
         return render(request, 'WKnews_web_draft 3_1.htm', {'form': form, 'type':'normal', "homepage":True, 'click_JSON':True})
 
+    # if request.META['HTTP_HOST']
+    initial = {
+    'company': '搵你笨保險有限公司',
+    'industry':u'保險',
+    # 職位名稱
+    'jobTitle':'保險推銷員',
+    # 工作地點
+    'place':'東區',
+    # 職務型態
+    'job_type':'全職',
+    #工作天數
+    'date_number':'10',
+    # 性別
+    'gender':'f',
+    # 你最近從事這份工作的年份
+    'latest_year':2015,
+    # 支薪周期
+    'salary_period':'月薪',
+    'salary':'10000',
+    # 行業年資
+    'year':9,
+    # 合約列明一周工時
+    'contract_hour':40,
+    # 每周工時
+    'week_total_hour':40,
 
+    # 超時
+    'OT_payment':u'有',
+
+    # 加班補償
+    'OT_frequency': u'絕少',
+    }
     form = ContactForm(
-            initial={
-            'company': '搵你笨保險有限公司',
-            'industry':u'保險',
-            # 職位名稱
-            'jobTitle':'保險推銷員',
-            # 工作地點
-            'place':'東區',
-            # 職務型態
-            'job_type':'全職',
-            #工作天數
-            'date_number':'10',
-            # 性別
-            'gender':'f',
-            # 你最近從事這份工作的年份
-            'latest_year':2015,
-            # 支薪周期
-            'salary_period':'月薪',
-            'salary':'10000',
-            # 行業年資
-            'year':9,
-            # 合約列明一周工時
-            'contract_hour':40,
-            # 每周工時
-            'week_total_hour':40,
-
-            # 超時
-            'OT_payment':u'有',
-
-            # 加班補償
-            'OT_frequency': u'絕少',
-            }
+            initial=initial
         )
 
     # homepage: 用來highlight homepage 的 navbar

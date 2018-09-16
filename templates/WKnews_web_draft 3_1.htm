@@ -10,7 +10,7 @@
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<div style="background-image:url({% static 'job/image/images/homepage-background.jpg'%}); position:absolute; left:0px; top:0px; width:1280px; height:960px;">
+<div class="body_wrapper" style="background-image:url({% static 'job/image/images/homepage-background.jpg'%}); position:absolute; top:0px; width:1280px; height:960px;">
 {% include 'navbar.htm' %}
 
 <form id='job-form' action="{% url 'added' %}" method="post">
@@ -134,96 +134,102 @@
 	</form>
 
 	<div style="position:absolute; left:515px; top:745px; width:358px; height:70.124px; font-size:12px; color: RGB(252, 238, 33)" >
-	{% if show_overlay %}
-	This is a dream.
-	{% endif %}
-	<div id="overlay">
-		<div class="close-button" onclick="off()" style="position:absolute; left:1100px; top:20px; width:22px; height:22px; font-size:22px">
-			&#10006;
-		</div>
-
-		<div class="search_list">
-		  <div class='overlay-button-label' style=" position:absolute; left:378px; top:34px; width:268px; height:26px;" title="">
-		    公司名稱
-		  </div>
-		  <div class='overlay-button overlay-company' style=" position:absolute; left:378px; top:60px; width:268px; height:26px;" title="">
-		    {{instance.company}}
-		  </div>
 
 
-		  <div class='overlay-button-label' style="position:absolute; left:654px; top:34px; width:187px; height:26px;" title="">
-		    行業
-			</div>
-		  <div class='overlay-button overlay-industry' style="position:absolute; left:654px; top:60px; width:187px; height:26px;" title="">
-		    {{instance.category}}
-			</div>
-
-		  <div class='overlay-button-label' style="position:absolute; left:378px; top:90px; width:268px; height:26px;" title="">
-		  職位名稱
-		  </div>
-		  <div class='overlay-button overlay-jobTitle' style="position:absolute; left:378px; top:116px; width:268px; height:26px;" title="">
-		    {{instance.jobTitle}}<!-- 職位名稱 -->
-			</div>
-
-		  <div class='overlay-button-label' style="position:absolute; left:654px; top:90px; width:187px; height:26px;" title="">
-		    工作地點
-			</div>
-		  <div class='overlay-button overlay-location2' style="position:absolute; left:654px; top:116px; width:187px; height:26px;" title="">
-		    {{instance.location2}}
-			</div>
-
-		  <div class='overlay-button-label' style="position:absolute; left:378px; top:146px; width:153px; height:26px;" title="">
-		    薪金
-			</div>
-		  <div class='overlay-button overlay-salary_type' style="position:absolute; left:378px; top:172px; width:153px; height:26px;" title="">
-		    {% if model == 'labor_gov' %}
-		      {{instance.salary_type}} ${{instance.money}}
-		    {% else %}
-		      {{instance.salary}}
-		    {% endif %}
-			</div>
-
-		  <div class='overlay-button-label' style="position:absolute; left:540px; top:146px; width:108px; height:26px;" title="">
-		    每週工作時數
-			</div>
-		  <div class='overlay-button overlay-week_total_hour' style="position:absolute; left:540px; top:172px; width:108px; height:26px;" title="">
-		    {{instance.week_total_hour}}
-			</div>
-
-		  <div class='overlay-button-label' style="position:absolute; left:657px; top:146px; width:108px; height:26px;" title="">
-		    每週工作天數
-			</div>
-		  <div class='overlay-button overlay-working_day_number' style="position:absolute; left:657px; top:172px; width:108px; height:26px;" title="">
-		    {{instance.working_day_number}}
-			</div>
-
-		  <div class='overlay-button-label' style="position:absolute; left:773px; top:146px; width:129px; height:26px;" title="">
-		    一周實際時薪
-			</div>
-		  <div class='overlay-button overlay-week_salary' style="position:absolute; left:773px; top:172px; width:129px; height:26px;" title="">
-		    一周實際時薪
-			</div>
-		</div> <!-- search list -->
-
-		<div id="loader-bundle">
-		<div id="loader"></div>
-		<div id="loader-text">分析中⋯⋯</div>
-		</div>
-
-	<div style="display:none;" id="myDiv" class="animate-bottom">
-	  {% include 'homepage_overlay.html' %}
-		<div class='overlay-button' style=" position:absolute; left:517px; top:856px; width:248px; height:56.974px; font-size:27px; text-align: center; margin-bottom:40px;">
-			<div class="title" style="margin:8px;">
-				<a href="{% url 'jobs_gov_data' %}">搜尋/分析其他職位</a>
-			</div> <!-- title -->
-		</div><!-- overlay_button -->
-	</div><!-- myDiv -->
-</div><!-- overlay -->
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/queue.v1.min.js"></script>
 <script src="https://d3js.org/topojson.v1.min.js"></script>
+</div>
+</div><!-- background-image -->
 
+<div id="overlay">
+	<div id="overlay_wrapper" class="overlay_wrapper" style="position:absolute; top:0px; width:1280px; height:960px">
+
+
+	<div class="search_list">
+		<div class="close-button" onclick="off()" style="position:absolute; left:1100px; top:20px; width:22px; height:22px; font-size:22px; color:rgb(252, 238, 33)">
+			&#10006;
+		</div>
+
+		<div class='overlay-button-label' style=" position:absolute; left:378px; top:34px; width:268px; height:26px;" title="">
+			公司名稱
+		</div>
+		<div class='overlay-button overlay-company' style=" position:absolute; left:378px; top:60px; width:268px; height:26px;" title="">
+			{{instance.company}}
+		</div>
+
+
+		<div class='overlay-button-label' style="position:absolute; left:654px; top:34px; width:187px; height:26px;" title="">
+			行業
+		</div>
+		<div class='overlay-button overlay-industry' style="position:absolute; left:654px; top:60px; width:187px; height:26px;" title="">
+			{{instance.category}}
+		</div>
+
+		<div class='overlay-button-label' style="position:absolute; left:378px; top:90px; width:268px; height:26px;" title="">
+		職位名稱
+		</div>
+		<div class='overlay-button overlay-jobTitle' style="position:absolute; left:378px; top:116px; width:268px; height:26px;" title="">
+			{{instance.jobTitle}}<!-- 職位名稱 -->
+		</div>
+
+		<div class='overlay-button-label' style="position:absolute; left:654px; top:90px; width:187px; height:26px;" title="">
+			工作地點
+		</div>
+		<div class='overlay-button overlay-location2' style="position:absolute; left:654px; top:116px; width:187px; height:26px;" title="">
+			{{instance.location2}}
+		</div>
+
+		<div class='overlay-button-label' style="position:absolute; left:378px; top:146px; width:153px; height:26px;" title="">
+			薪金
+		</div>
+		<div class='overlay-button overlay-salary_type' style="position:absolute; left:378px; top:172px; width:153px; height:26px;" title="">
+			{% if model == 'labor_gov' %}
+				{{instance.salary_type}} ${{instance.money}}
+			{% else %}
+				{{instance.salary}}
+			{% endif %}
+		</div>
+
+		<div class='overlay-button-label' style="position:absolute; left:540px; top:146px; width:108px; height:26px;" title="">
+			每週工作時數
+		</div>
+		<div class='overlay-button overlay-week_total_hour' style="position:absolute; left:540px; top:172px; width:108px; height:26px;" title="">
+			{{instance.week_total_hour}}
+		</div>
+
+		<div class='overlay-button-label' style="position:absolute; left:657px; top:146px; width:108px; height:26px;" title="">
+			每週工作天數
+		</div>
+		<div class='overlay-button overlay-working_day_number' style="position:absolute; left:657px; top:172px; width:108px; height:26px;" title="">
+			{{instance.working_day_number}}
+		</div>
+
+		<div class='overlay-button-label' style="position:absolute; left:773px; top:146px; width:129px; height:26px;" title="">
+			一周實際時薪
+		</div>
+		<div class='overlay-button overlay-week_salary' style="position:absolute; left:773px; top:172px; width:129px; height:26px;" title="">
+			一周實際時薪
+		</div>
+	</div> <!-- search list -->
+
+	<div id="loader-bundle">
+	<div id="loader"></div>
+	<div id="loader-text">分析中⋯⋯</div>
+	</div>
+
+<div style="display:none;" id="myDiv" class="animate-bottom">
+	{% include 'homepage_overlay.html' %}
+	<div class='overlay-button' style=" position:absolute; left:517px; top:856px; width:248px; height:56.974px; font-size:27px; text-align: center; margin-bottom:40px;">
+		<div class="title" style="margin:8px;">
+			<a href="{% url 'jobs_gov_data' %}" style="text-decoration: none;
+		  color: RGB(83, 71, 65);">搜尋/分析其他職位</a>
+		</div> <!-- title -->
+	</div><!-- overlay_button -->
+</div><!-- myDiv -->
+</div><!-- overlay wrapper -->
+</div><!-- overlay -->
 </body>
 </html>
 <style>

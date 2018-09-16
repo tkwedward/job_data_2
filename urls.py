@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^data$', jobs_gov_data, name="jobs_gov_data"),
     # url(r'^add_json_data$', add_json_data, name="add_json_data"),
 
-
+    # analysis.html
     url(r'^jobs_gov_data/(?P<model_name>\w+)/(?P<id>\d+)/$', jobs_gov_data_detail, name="jobs_gov_data_detail"),
 
 ]

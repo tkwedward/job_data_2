@@ -33,6 +33,7 @@ console.log("hi");
 $('#job-form').on('submit', function(event){
 	event.preventDefault();
   document.getElementById("overlay").style.display = "block";
+  // overlay_offset_adjust()
   myVar = setTimeout(showPage, 4000);
 	on()
 });
@@ -99,15 +100,28 @@ function draw_the_graph(json, svg_frame, svg_title, x_title_text, title_text,  h
 			.attr('y', d=> yScale(d.number))
 			.attr('height', d=> height-yScale(d.number) )
 			.style('fill', d => d.color)
-      .on("mouseover", function(d,i){
-        var bar_texts = d3.select(svg_frame).selectAll(".bar_number")["_groups"][0]
-        d3.select(bar_texts[i]).style("visibility", "visible");
-      })
-      .on("mouseout", function(d,i){
-        var bar_texts = d3.select(svg_frame).selectAll(".bar_number")["_groups"][0]
-        d3.select(bar_texts[i]).style("visibility", "hidden");
-      })
 
+    chart_group
+        .append('g')
+    		.selectAll('rect.bar')
+    		.data(hour_data).enter()
+        .append('rect')
+  			.attr('transform', 'translate(0,0)')
+  			.classed('bar', true)
+  			.attr('x', (d, i) => i*bar_width)
+  			.attr('width', 20)
+  			.attr('y', 0)
+  			.attr('height', d=> height )
+  			.style('fill', "rgb(0,0,0,0)")
+        // 顯示 bar chart 人數
+        .on("mouseover", function(d,i){
+          var bar_texts = d3.select(svg_frame).selectAll(".bar_number")["_groups"][0]
+          d3.select(bar_texts[i]).style("visibility", "visible");
+        })
+        .on("mouseout", function(d,i){
+          var bar_texts = d3.select(svg_frame).selectAll(".bar_number")["_groups"][0]
+          d3.select(bar_texts[i]).style("visibility", "hidden");
+        })
 // x axis的刻度
 		chart_group
 			.selectAll('rect.bar')

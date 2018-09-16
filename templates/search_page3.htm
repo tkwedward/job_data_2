@@ -7,8 +7,8 @@
 <title>WKnews web draft 3</title>
 
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<div style="background-image:url({% static 'job/image/images/search_page1.jpg' %});  position:absolute; left:0px; top:0px; width:1280px; height:960px;" >
+<body>
+<div class="body_wrapper" style="background-image:url({% static 'job/image/images/search_page1.jpg' %});  position:absolute; left:0px; top:0px; width:1280px; height:960px;" >
 {% include 'navbar.htm' %}
 
 	<div style="position:absolute; left:64px; top:65px; width:292px; height:129px;" title="">
@@ -47,7 +47,7 @@
 	</div>
 
 	<input style="position:absolute; left:727px; top:285px; width:58px; height:26px;" type="submit" value="提交" />
-	</div>
+
 
 	<div style="position:absolute; left:862px; top:285px; width:327px; height:70px;" title="">
 		{% include 'range_slider.html' %}
@@ -118,5 +118,5 @@
 
 	<!-- 這個js 是用來控制三個按掣︰只顯示勞工處資料 只顯示用戶輸入的資料 混合顯示 -->
 	{% include 'search_page_user_input_filter.html' %}
-
+</div> <!-- body_wrapper -->
  </html>
