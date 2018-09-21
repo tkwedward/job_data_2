@@ -8,9 +8,7 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<script>
-   var which_one = 'group'
-</script>
+
 
 
 <div class="overlay-background body_wrapper" style="position:absolute; top:0px; width:1280px; height:960px; background-image:url({% static 'job/image/images/WKnews-web-analysis-background.jpg' %});">
@@ -21,7 +19,7 @@
   <div class='overlay-button-label' style=" position:absolute;left:378px; top:94px; width:268px; height:26px;" title="">
     公司名稱
   </div>
-  <div class='overlay-button' style=" position:absolute; left:378px; top:120px; width:268px; height:26px;" title="">
+  <div class='overlay-button overlay-overflow overlay-company' style=" position:absolute; left:378px; top:120px;  height:26px;" title="">
     {{form.company}}
   </div>
 
@@ -43,7 +41,7 @@
   <div class='overlay-button-label' style="position:absolute; left:654px; top:150px; width:187px; height:26px;" title="">
     工作地點
 	</div>
-  <div class='overlay-button' style="position:absolute; left:654px; top:176px; width:187px; height:26px;" title="">
+  <div class='overlay-button overlay-overflow overlay-place' style="position:absolute; left:654px; top:176px; width:187px; height:26px;" title="">
     {{form.place}}
 	</div>
 
@@ -80,6 +78,11 @@
 	</div>
 </div> <!-- search list -->
 
+
+<script>
+   var which_one = 'group'
+</script>
+
 <!-- start 中間東西 -->
   <svg class='title_1 graph-detail' style="position:absolute; left:533px; top:284px; width:221px; height:20px;"></svg>
 
@@ -100,9 +103,7 @@
 
 <div id='holder'></div>
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://d3js.org/queue.v1.min.js"></script>
-<script src="https://d3js.org/topojson.v1.min.js"></script>
+
 
 
 
@@ -144,3 +145,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'job/css/analysis_page.css' %}" />
 </div> <!-- class="body_wrapper" -->
+<script>
+var companyOverflow = overflow(".overlay-overflow")
+var placeOverflow = overflow(".overlay-place")
+</script>

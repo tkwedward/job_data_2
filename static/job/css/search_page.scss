@@ -53,6 +53,7 @@ p.heading{
   top:211px;
   width:233px;
   height:26px;
+
 }
 
 $down_width: 155;
@@ -85,6 +86,19 @@ $down_width: 155;
   text-align: center;
 }
 
+.job_row_box_company{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 300px;
+}
+
+.job_row_box_location2{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 145px;
+}
 
 // for the three brown buttons
 .job_row_model_filter{

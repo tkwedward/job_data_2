@@ -12,6 +12,12 @@
 .overlay-button {
   padding: 4px; }
 
+.overlay-company {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 268px; }
+
 .close-button {
   color: #fcee21; }
 

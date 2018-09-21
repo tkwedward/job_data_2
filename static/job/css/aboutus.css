@@ -1,24 +1,34 @@
-h2{
+h2 {
   color: #534741;
   font-size: 30px;
   text-align: left;
   margin-top: 0px;
-  margin-bottom: 0px;
-}
+  margin-bottom: 0px; }
 
-h1{
+h1 {
   color: #534741;
   font-size: 61px;
   line-height: 70px;
   margin-top: 0px;
-  margin-bottom: 0px;
-}
+  margin-bottom: 0px; }
 
-p{
+p {
   color: #534741;
   font-size: 18px;
   line-height: 26px;
   text-align: center;
   margin-top: 0px;
-  margin-bottom: 0px;
-}
+  margin-bottom: 0px; }
+
+.QaA p {
+  color: #534741;
+  font-size: 18px;
+  line-height: 26px;
+  text-align: left;
+  margin-top: 0px;
+  margin-bottom: 0px; }
+
+.title_2 h1 {
+  font-size: 24px; }
+
+/*# sourceMappingURL=aboutus.css.map */

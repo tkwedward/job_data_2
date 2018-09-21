@@ -71,6 +71,18 @@ p.heading {
 #input-with-keypress-0, #input-with-keypress-1 {
   text-align: center; }
 
+.job_row_box_company {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 300px; }
+
+.job_row_box_location2 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 145px; }
+
 .job_row_model_filter span {
   padding: 5px;
   margin-right: 8px;
